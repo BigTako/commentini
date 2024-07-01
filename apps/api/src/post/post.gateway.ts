@@ -23,7 +23,7 @@ import {
 import { CheckBodyInterceptor } from 'src/interceptors/check-body.interceptor';
 import { WsExceptionInterceptor } from 'src/interceptors/ws-exception.interceptor';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: { origin: '*' } })
 @UseInterceptors(WsExceptionInterceptor)
 @UseFilters(new GlobalExceptionFilter())
 export class PostGateway
