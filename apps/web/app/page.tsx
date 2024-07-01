@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@mui/material";
 import styled from "@emotion/styled";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,7 +6,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 
 const StyledMainContainer = styled("main")`
   width: 100%;
@@ -18,7 +16,7 @@ const StyledMainContainer = styled("main")`
 `;
 
 const PostsContainer = styled.div`
-  width: 800px;
+  width: 900px;
 `;
 
 const posts = [
@@ -43,54 +41,134 @@ const posts = [
     text: "You can also sort by properties of a relation. For example, the following query sorts all posts by the author's email address:",
     createdAt: "2024-07-01T06:32:18.792Z",
   },
+  {
+    id: "787158a9-3ccb-444f-999f-5ec76bfae91a",
+    email: "2@gmail.com",
+    username: "alex",
+    text: "You can also sort by properties of a relation. For example, the following query sorts all posts by the author's email address:",
+    createdAt: "2024-07-01T06:32:18.792Z",
+  },
+  {
+    id: "787158a9-3ccb-444f-999f-5ec76bfae91a",
+    email: "2@gmail.com",
+    username: "alex",
+    text: "You can also sort by properties of a relation. For example, the following query sorts all posts by the author's email address:",
+    createdAt: "2024-07-01T06:32:18.792Z",
+  },
+  {
+    id: "787158a9-3ccb-444f-999f-5ec76bfae91a",
+    email: "2@gmail.com",
+    username: "alex",
+    text: "You can also sort by properties of a relation. For example, the following query sorts all posts by the author's email address:",
+    createdAt: "2024-07-01T06:32:18.792Z",
+  },
+  {
+    id: "787158a9-3ccb-444f-999f-5ec76bfae91a",
+    email: "2@gmail.com",
+    username: "alex",
+    text: "You can also sort by properties of a relation. For example, the following query sorts all posts by the author's email address:",
+    createdAt: "2024-07-01T06:32:18.792Z",
+  },
+  {
+    id: "787158a9-3ccb-444f-999f-5ec76bfae91a",
+    email: "2@gmail.com",
+    username: "alex",
+    text: "You can also sort by properties of a relation. For example, the following query sorts all posts by the author's email address:",
+    createdAt: "2024-07-01T06:32:18.792Z",
+  },
+  {
+    id: "787158a9-3ccb-444f-999f-5ec76bfae91a",
+    email: "2@gmail.com",
+    username: "alex",
+    text: "You can also sort by properties of a relation. For example, the following query sorts all posts by the author's email address:",
+    createdAt: "2024-07-01T06:32:18.792Z",
+  },
+  {
+    id: "787158a9-3ccb-444f-999f-5ec76bfae91a",
+    email: "2@gmail.com",
+    username: "alex",
+    text: "You can also sort by properties of a relation. For example, the following query sorts all posts by the author's email address:",
+    createdAt: "2024-07-01T06:32:18.792Z",
+  },
 ];
 
-function PostsTable() {
+const StyledTableRow = styled(TableRow)`
+  &:nth-of-type(even) {
+    background-color: var(--color-primary-200);
+  }
+  &:last-child td,
+  &:last-child th {
+    border: 0;
+  }
+`;
+
+const StyledTableHead = styled(TableHead)`
+  & > tr > th {
+    background-color: var(--color-primary-300);
+  }
+`;
+
+interface IPost {
+  id: string;
+  email: string;
+  username: string;
+  text: string;
+  createdAt: string;
+}
+
+const StyledTableContainer = styled(TableContainer)`
+  & {
+    background-color: var(--color-primary-100);
+    box-shadow: 0 5px 10px rgb(0 0 0 / 0.2);
+    border-radius: 8px;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+`;
+
+function PostsTable({ posts }: { posts: IPost[] }) {
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
+    <StyledTableContainer>
+      <Table stickyHeader aria-label="simple table">
+        <StyledTableHead>
           <TableRow>
             <TableCell>Username</TableCell>
-            <TableCell align="right">Email</TableCell>
-            <TableCell align="right">Text</TableCell>
-            <TableCell align="right">Created At</TableCell>
+            <TableCell align="center">Email</TableCell>
+            <TableCell align="center">Text</TableCell>
+            <TableCell align="center">Created At</TableCell>
           </TableRow>
-        </TableHead>
+        </StyledTableHead>
         <TableBody>
-          {posts.map((post) => (
-            <TableRow
-              key={post.id}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {post.username}
-              </TableCell>
-              <TableCell align="right">{post.email}</TableCell>
-              <TableCell align="right">{post.text}</TableCell>
-              <TableCell align="right">
-                {new Date(post.createdAt).toLocaleString()}
-              </TableCell>
-            </TableRow>
-          ))}
+          {posts.map((post) => {
+            const { id, username, email, text, createdAt } = post;
+
+            return (
+              <StyledTableRow
+                key={id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {username}
+                </TableCell>
+                <TableCell align="right">{email}</TableCell>
+                <TableCell align="right">{text}</TableCell>
+                <TableCell align="right" suppressHydrationWarning>
+                  {new Date(createdAt).toLocaleString()}
+                </TableCell>
+              </StyledTableRow>
+            );
+          })}
         </TableBody>
       </Table>
-    </TableContainer>
+    </StyledTableContainer>
   );
 }
 
 export default function Page(): JSX.Element {
-  // const { data } = useQuery({
-  //   queryKey: ["get-hello"],
-  //   queryFn: () => getHello(),
-  // });
-
   return (
     <StyledMainContainer>
       <PostsContainer>
-        <Button variant="contained">
-          <PostsTable />
-        </Button>
+        <PostsTable posts={posts} />
       </PostsContainer>
     </StyledMainContainer>
   );
