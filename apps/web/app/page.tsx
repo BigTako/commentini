@@ -14,7 +14,7 @@ const StyledMainContainer = styled("main")`
 `;
 
 const StyledPostsContainer = styled.div`
-  width: 900px;
+  width: 800px;
 `;
 
 export default function Page(): JSX.Element {
@@ -23,15 +23,14 @@ export default function Page(): JSX.Element {
 
   return (
     <StyledMainContainer>
-      <StyledPostsContainer>
-        {isConnected && isLoading && (
-          <div style={{ textAlign: "center" }}>Loading...</div>
-        )}
-        {!isConnected && (
-          <div style={{ textAlign: "center" }}>Disconnected</div>
-        )}
-        {isConnected && !isLoading && <PostsTable posts={posts} />}
-      </StyledPostsContainer>
+      {isConnected && isLoading && (
+        <div style={{ textAlign: "center" }}>Loading...</div>
+      )}
+      {!isConnected && <div style={{ textAlign: "center" }}>Disconnected</div>}
+      {isConnected && !isLoading && <PostsTable posts={posts} />}
+      {/* <StyledPostsContainer>
+        
+      </StyledPostsContainer> */}
     </StyledMainContainer>
   );
 }

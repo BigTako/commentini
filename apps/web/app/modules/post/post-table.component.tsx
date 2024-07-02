@@ -23,26 +23,73 @@ const StyledTableHead = styled(TableHead)`
   }
 `;
 
-const StyledTableContainer = styled(TableContainer)`
-  & {
+interface StyledTableContainerProps {
+  columnsNum: number;
+  columWidth: number;
+}
+
+const StyledTableContainer = styled(TableContainer)<StyledTableContainerProps>`
+  && {
     background-color: var(--color-primary-100);
     box-shadow: 0 5px 10px rgb(0 0 0 / 0.2);
     border-radius: 8px;
     max-height: 500px;
     overflow-y: auto;
+    width: ${({ columnsNum, columWidth }) => columnsNum * columWidth}px;
   }
 `;
 
-function PostsTable({ posts }: { posts: IPost[] }) {
+const StyledTableCell = styled(TableCell)`
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+function TableDashboard({
+  headers,
+  items,
+}: {
+  headers: string[];
+  items: object[];
+}) {
   return (
-    <StyledTableContainer>
-      <Table stickyHeader aria-label="simple table">
+    <StyledTableContainer columWidth={250} columnsNum={headers.length}>
+      <Table stickyHeader aria-label="Table of posts">
         <StyledTableHead>
           <TableRow>
-            <TableCell>Username</TableCell>
-            <TableCell align="center">Email</TableCell>
-            <TableCell align="center">Text</TableCell>
-            <TableCell align="center">Created At</TableCell>
+            {headers.map((header) => (
+              <StyledTableCell>{header}</StyledTableCell>
+            ))}
+          </TableRow>
+        </StyledTableHead>
+        <TableBody>
+          {items.map((item, i) => (
+            <StyledTableRow
+              key={i}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              {Object.values(item).map((value) => (
+                <StyledTableCell align="right">{value}</StyledTableCell>
+              ))}
+            </StyledTableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </StyledTableContainer>
+  );
+}
+
+function PostsTable({ posts }: { posts: IPost[] }) {
+  return (
+    <StyledTableContainer columWidth={250} columnsNum={4}>
+      <Table stickyHeader aria-label="Table of posts">
+        <StyledTableHead>
+          <TableRow>
+            <StyledTableCell>Username</StyledTableCell>
+            <StyledTableCell align="center">Email</StyledTableCell>
+            <StyledTableCell align="center">Text</StyledTableCell>
+            <StyledTableCell align="center">Created At</StyledTableCell>
           </TableRow>
         </StyledTableHead>
         <TableBody>
@@ -54,14 +101,14 @@ function PostsTable({ posts }: { posts: IPost[] }) {
                 key={id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
+                <StyledTableCell component="th" scope="row">
                   {username}
-                </TableCell>
-                <TableCell align="right">{email}</TableCell>
-                <TableCell align="right">{text}</TableCell>
-                <TableCell align="right" suppressHydrationWarning>
+                </StyledTableCell>
+                <StyledTableCell align="right">{email}</StyledTableCell>
+                <StyledTableCell align="right">{text}</StyledTableCell>
+                <StyledTableCell align="right" suppressHydrationWarning>
                   {new Date(createdAt).toLocaleString()}
-                </TableCell>
+                </StyledTableCell>
               </StyledTableRow>
             );
           })}
