@@ -5,10 +5,10 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { BaseWsExceptionFilter, WsException } from '@nestjs/websockets';
-import { WS_CLIENT_EVENTS } from 'src/config/keys/ws-events';
 import { ZodError } from 'zod';
 import { Socket } from 'socket.io';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { WS_SERVER_EVENTS } from 'src/config/keys/ws-events';
 
 interface ErrorResponse {
   statusCode: number;
@@ -117,7 +117,7 @@ export class GlobalExceptionFilter
 
       const errorResponse = formatException({ exception: error, status });
 
-      return client.emit(WS_CLIENT_EVENTS.SERVER_EXCEPTION, errorResponse);
+      return client.emit(WS_SERVER_EVENTS.SERVER_EXCEPTION, errorResponse);
     }
 
     if (exception instanceof HttpException) {

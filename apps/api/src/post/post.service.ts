@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/services/prisma.service';
-import { TCreatePostDto, TPost, TUpdatePostDto } from './post';
 import { Prisma } from '@prisma/client';
+import { ICreatePostDto, IPost, IPostId, IUpdatePostDto } from './post';
 
 @Injectable()
 export class PostService {
@@ -11,7 +11,7 @@ export class PostService {
     return posts;
   }
 
-  async findOne(id: TPost['id']): Promise<TPost> {
+  async findOne(id: IPostId): Promise<IPost> {
     const post = await this.prismaService.post.findUnique({
       where: { id },
       include: {
@@ -26,14 +26,14 @@ export class PostService {
     return post;
   }
 
-  async create(data: TCreatePostDto): Promise<TPost> {
+  async create(data: ICreatePostDto): Promise<IPost> {
     const post = await this.prismaService.post.create({
       data,
     });
     return post;
   }
 
-  async update(id: TPost['id'], data: TUpdatePostDto) {
+  async update(id: IPostId, data: IUpdatePostDto) {
     const post = await this.prismaService.post.update({
       where: {
         id,
@@ -43,7 +43,7 @@ export class PostService {
     return post;
   }
 
-  async createReply(id: TPost['id'], data: TCreatePostDto) {
+  async createReply(id: IPostId, data: ICreatePostDto) {
     const post = await this.prismaService.post.update({
       where: {
         id,
