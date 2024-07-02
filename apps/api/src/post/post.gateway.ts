@@ -76,7 +76,7 @@ export class PostGateway
   ): Promise<void> {
     const { page = 1, sortBy = 'createdAt', sort = 'desc' } = body;
 
-    const take = 5;
+    const take = 25;
     const skip = (page - 1) * take;
 
     const posts = await this.postService.findAll({

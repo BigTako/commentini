@@ -16,9 +16,6 @@ CREATE TABLE "_PostReplies" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "post_email_key" ON "post"("email");
-
--- CreateIndex
 CREATE UNIQUE INDEX "_PostReplies_AB_unique" ON "_PostReplies"("A", "B");
 
 -- CreateIndex

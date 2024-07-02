@@ -24,4 +24,3 @@ model Post {
   repliedBy  Post[]   @relation("PostReplies")
   @@map("post")
 }
-

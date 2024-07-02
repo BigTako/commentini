@@ -48,14 +48,10 @@ export default function Page(): JSX.Element {
   }, [isConnected]);
 
   useEffect(() => {
-    socket.emit(SOCKET_EVENTS.GET_ALL_POSTS, {}, () => {
-      console.log("get-all-posts");
-    });
-  }, []);
-
-  console.log({
-    posts,
-  });
+    if (isConnected) {
+      socket.emit(SOCKET_EVENTS.GET_ALL_POSTS, {});
+    }
+  }, [isConnected]);
 
   return (
     <StyledMainContainer>
