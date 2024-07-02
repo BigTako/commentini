@@ -23,7 +23,7 @@ import {
 import { CheckBodyInterceptor } from 'src/interceptors/check-body.interceptor';
 import { WsExceptionInterceptor } from 'src/interceptors/ws-exception.interceptor';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: { origin: '*' } })
 @UseInterceptors(WsExceptionInterceptor)
 @UseFilters(new GlobalExceptionFilter())
 export class PostGateway
@@ -76,7 +76,7 @@ export class PostGateway
   ): Promise<void> {
     const { page = 1, sortBy = 'createdAt', sort = 'desc' } = body;
 
-    const take = 5;
+    const take = 25;
     const skip = (page - 1) * take;
 
     const posts = await this.postService.findAll({
