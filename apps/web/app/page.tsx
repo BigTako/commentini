@@ -2,10 +2,8 @@
 
 import styled from "@emotion/styled";
 import PostsTable from "./modules/post/post-table.component";
-import { useEffect, useState } from "react";
-import { socket } from "./utils/socket";
-import { SOCKET_EVENTS } from "./keys";
-import { IPost } from "./modules/post/post";
+import { usePosts } from "./modules/post/usePosts";
+import { useSocket } from "./hooks/useSocket";
 
 const StyledMainContainer = styled("main")`
   width: 100%;
@@ -20,46 +18,19 @@ const StyledPostsContainer = styled.div`
 `;
 
 export default function Page(): JSX.Element {
-  const [isConnected, setIsConnected] = useState(false);
-  const [posts, setPosts] = useState<IPost[]>([]);
-  useEffect(() => {
-    function onConnect() {
-      console.log("You are connected");
-      setIsConnected(true);
-    }
-
-    function onDisconnect() {
-      console.log("You are disconnected");
-      setIsConnected(false);
-    }
-
-    function onReceiveAllPosts(data: IPost[]) {
-      setPosts(data);
-    }
-
-    socket.on(SOCKET_EVENTS.RECEIVE_ALL_POSTS, onReceiveAllPosts);
-    socket.on(SOCKET_EVENTS.CONNECT, onConnect);
-    socket.on(SOCKET_EVENTS.DISCONNECT, onDisconnect);
-
-    return () => {
-      socket.off(SOCKET_EVENTS.CONNECT, onConnect);
-      socket.off(SOCKET_EVENTS.DISCONNECT, onDisconnect);
-    };
-  }, [isConnected]);
-
-  useEffect(() => {
-    if (isConnected) {
-      socket.emit(SOCKET_EVENTS.GET_ALL_POSTS, {});
-    }
-  }, [isConnected]);
+  const { socket, isConnected } = useSocket();
+  const { isLoading, posts } = usePosts({ socket, isConnected });
 
   return (
     <StyledMainContainer>
       <StyledPostsContainer>
+        {isConnected && isLoading && (
+          <div style={{ textAlign: "center" }}>Loading...</div>
+        )}
         {!isConnected && (
           <div style={{ textAlign: "center" }}>Disconnected</div>
         )}
-        {isConnected && <PostsTable posts={posts} />}
+        {isConnected && !isLoading && <PostsTable posts={posts} />}
       </StyledPostsContainer>
     </StyledMainContainer>
   );
