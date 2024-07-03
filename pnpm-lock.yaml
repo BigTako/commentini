@@ -129,6 +129,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@emotion/css':
+        specifier: ^11.11.2
+        version: 11.11.2
       '@emotion/react':
         specifier: ^11.11.4
         version: 11.11.4(@types/react@18.2.5)(react@18.2.0)
@@ -478,6 +481,9 @@ packages:
 
   '@emotion/cache@11.11.0':
     resolution: {integrity: sha512-P34z9ssTCBi3e9EI1ZsWpNHcfY1r09ZO0rZbRO2ob3ZQMnFI35jB536qoXbkdesr5EUhYi22anuEJuyxifaqAQ==}
+
+  '@emotion/css@11.11.2':
+    resolution: {integrity: sha512-VJxe1ucoMYMS7DkiMdC2T7PWNbrEI0a39YRiyDvK2qq4lXwjRbVP/z4lpG+odCsRzadlR+1ywwrTzhdm5HNdew==}
 
   '@emotion/hash@0.9.1':
     resolution: {integrity: sha512-gJB6HLm5rYwSLI6PQa+X1t5CFGrv1J1TWG+sOyMCeKz2ojaj6Fnl/rZEspogG+cvqbt4AE/2eIyD2QfLKTBNlQ==}
@@ -4795,6 +4801,14 @@ snapshots:
       '@emotion/utils': 1.2.1
       '@emotion/weak-memoize': 0.3.1
       stylis: 4.2.0
+
+  '@emotion/css@11.11.2':
+    dependencies:
+      '@emotion/babel-plugin': 11.11.0
+      '@emotion/cache': 11.11.0
+      '@emotion/serialize': 1.1.4
+      '@emotion/sheet': 1.2.2
+      '@emotion/utils': 1.2.1
 
   '@emotion/hash@0.9.1': {}
 

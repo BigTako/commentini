@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import PostsTable from "./modules/post/post-table.component";
 import { usePosts } from "./modules/post/usePosts";
-import { useSocket } from "./hooks/useSocket";
+import { useSocket } from "./_shared/hooks/useSocket";
 
 const StyledMainContainer = styled("main")`
   width: 100%;
@@ -11,10 +11,6 @@ const StyledMainContainer = styled("main")`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const StyledPostsContainer = styled.div`
-  width: 800px;
 `;
 
 export default function Page(): JSX.Element {
@@ -28,9 +24,6 @@ export default function Page(): JSX.Element {
       )}
       {!isConnected && <div style={{ textAlign: "center" }}>Disconnected</div>}
       {isConnected && !isLoading && <PostsTable posts={posts} />}
-      {/* <StyledPostsContainer>
-        
-      </StyledPostsContainer> */}
     </StyledMainContainer>
   );
 }
