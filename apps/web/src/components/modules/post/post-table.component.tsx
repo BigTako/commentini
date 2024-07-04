@@ -1,7 +1,7 @@
-import { IPost } from "./post.d";
-import { TableDashboard } from "../../_shared/components/table-dashboard";
-import { StyledTableCell } from "../../_shared/components/table-dashboard/cell.component";
-import { StyledTableRow } from "../../_shared/components/table-dashboard/row.component";
+import { IPost } from "./types";
+import { TableDashboard } from "@components/table-dashboard";
+import { StyledTableCell } from "@components/table-dashboard/cell.component";
+import { StyledTableRow } from "@components/table-dashboard/row.component";
 
 function PostsTable({ posts }: { posts: IPost[] }) {
   return (

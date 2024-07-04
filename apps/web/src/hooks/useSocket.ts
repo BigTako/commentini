@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { SOCKET_EVENTS } from "../keys";
-import { socket } from "../../../utils/socket";
+import { SOCKET_EVENTS } from "@keys";
 import { Socket } from "socket.io-client";
+import { socket } from "@utils/socket";
 
 export function useSocket(): { socket: Socket; isConnected: boolean } {
   const [isConnected, setIsConnected] = useState(false);

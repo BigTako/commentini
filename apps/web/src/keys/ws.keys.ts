@@ -1,7 +1,3 @@
-export const STORAGE_KEYS = Object.freeze({
-  TOKEN: "TOKEN",
-});
-
 export const SOCKET_EVENTS = Object.freeze({
   CONNECT: "connect",
   DISCONNECT: "disconnect",

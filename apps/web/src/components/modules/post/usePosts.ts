@@ -1,8 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { Socket } from "socket.io-client";
-import { SOCKET_EVENTS } from "../../_shared/keys";
-import { IPost } from "./post";
+import { SOCKET_EVENTS } from "@keys";
+import { IPost } from "./types";
 
 export function usePosts({
   socket,

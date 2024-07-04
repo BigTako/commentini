@@ -1,9 +1,8 @@
 "use client";
-
 import styled from "@emotion/styled";
-import PostsTable from "./modules/post/post-table.component";
-import { usePosts } from "./modules/post/usePosts";
-import { useSocket } from "./_shared/hooks/useSocket";
+import { useSocket } from "@hooks/useSocket";
+import { usePosts } from "@hooks/usePosts";
+import PostsTable from "@modules/post/post-table.component";
 
 const StyledMainContainer = styled("main")`
   width: 100%;

@@ -36,7 +36,7 @@ export function TableDashboard<T>({
 }: {
   headers: string[];
   items: T[];
-  renderRow: (item: T) => JSX.Element;
+  renderRow: (_item: T) => JSX.Element;
 }) {
   return (
     <StyledTableContainer $columWidth={250} $columnsNum={headers.length}>
