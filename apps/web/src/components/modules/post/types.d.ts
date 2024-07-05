@@ -4,4 +4,5 @@ export interface IPost {
   username: string;
   text: string;
   createdAt: string;
+  [key: string | symbol]: string | Date;
 }

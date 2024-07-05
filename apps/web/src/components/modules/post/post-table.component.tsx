@@ -1,35 +1,40 @@
+import { CustomTableColumn } from "~/components/containers/custom-table/types";
 import { IPost } from "./types";
-import { TableDashboard } from "@components/table-dashboard";
-import { StyledTableCell } from "@components/table-dashboard/cell.component";
-import { StyledTableRow } from "@components/table-dashboard/row.component";
+import { CustomTable } from "~/components/containers";
+
+const columns: CustomTableColumn[] = [
+  {
+    id: 1,
+    name: "Username User",
+    field: "username",
+    textAlign: "center" as const,
+    width: 200,
+  },
+  {
+    id: 2,
+    name: "Email",
+    field: "email",
+    textAlign: "center" as const,
+    width: 200,
+  },
+  {
+    id: 3,
+    name: "Text",
+    field: "text",
+    width: 200,
+  },
+  {
+    id: 4,
+    name: "Created At",
+    field: "createdAt",
+    formatField: (value) => new Date(value as string).toLocaleString(),
+    width: 200,
+  },
+];
 
 function PostsTable({ posts }: { posts: IPost[] }) {
   const tableId = "posts-table";
-  return (
-    <TableDashboard
-      id={tableId}
-      headers={["Username", "Email", "Text", "Created At"]}
-      items={posts}
-      renderRow={(post) => {
-        const { id, username, email, text, createdAt } = post;
-        return (
-          <StyledTableRow
-            key={`${tableId}-item-${id}`}
-            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-          >
-            <StyledTableCell component="th" scope="row">
-              {username}
-            </StyledTableCell>
-            <StyledTableCell align="right">{email}</StyledTableCell>
-            <StyledTableCell align="right">{text}</StyledTableCell>
-            <StyledTableCell align="right" suppressHydrationWarning>
-              {new Date(createdAt).toLocaleString()}
-            </StyledTableCell>
-          </StyledTableRow>
-        );
-      }}
-    />
-  );
+  return <CustomTable id={tableId} columns={columns} rows={posts} />;
 }
 
 export default PostsTable;

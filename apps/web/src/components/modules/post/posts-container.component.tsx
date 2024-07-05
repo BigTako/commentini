@@ -5,7 +5,7 @@ import PostsTable from "@modules/post/post-table.component";
 import PostsList from "~/components/modules/post/posts-list.component";
 
 const DesktopContainer = styled("div")`
-  width: 800px;
+  max-width: 800px;
 `;
 
 const MobileContainer = styled("div")`
