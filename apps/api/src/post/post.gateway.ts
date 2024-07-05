@@ -9,21 +9,23 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { WS_SERVER_EVENTS, WS_CLIENT_EVENTS } from 'src/config/keys/ws-events';
 import { GlobalExceptionFilter } from 'src/filters/global-exception.filter';
 import { createPostSchema } from 'src/lib/validation-schemas/post';
 import { ZodPipe } from 'src/pipes/validation.pipe';
 import { PostService } from './post.service';
-import {
-  TCreatePostDto,
-  TCreateReplyDto,
-  TFindPostDto,
-  TGetAllPostsParams,
-} from './post';
 import { CheckBodyInterceptor } from 'src/interceptors/check-body.interceptor';
 import { WsExceptionInterceptor } from 'src/interceptors/ws-exception.interceptor';
+import { WS_POST_EVENTS } from 'src/config/keys/ws-events';
+import {
+  ICreatePostDto,
+  ICreateReplyDto,
+  IGetAllPostsParams,
+  IGetPostDto,
+  IPost,
+  IPostResponse,
+} from './post';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: { origin: '*' } })
 @UseInterceptors(WsExceptionInterceptor)
 @UseFilters(new GlobalExceptionFilter())
 export class PostGateway
@@ -40,43 +42,41 @@ export class PostGateway
   handleConnection(client: Socket) {
     console.log(`Client (${client.id}) connected`);
 
-    client.emit(WS_CLIENT_EVENTS.USER_CONNECTED, {
-      message: 'success',
-    });
+    return { message: 'success' };
   }
 
   handleDisconnect(client: any) {
     console.log(`Client (${client.id}) connected`);
 
-    client.emit(WS_CLIENT_EVENTS.USER_DISCONNECTED, {
-      message: 'success',
-    });
+    return { message: 'success' };
   }
 
   @UseInterceptors(CheckBodyInterceptor)
-  @SubscribeMessage(WS_SERVER_EVENTS.CREATE_POST)
+  @SubscribeMessage(WS_POST_EVENTS.CREATE_POST)
   async handleCreatePost(
-    @MessageBody(new ZodPipe(createPostSchema, 'ws')) body: TCreatePostDto,
-  ): Promise<void> {
+    @MessageBody(new ZodPipe(createPostSchema, 'ws')) body: ICreatePostDto,
+  ): Promise<IPostResponse<IPost>> {
     const post = await this.postService.create(body);
-    this.server.emit(WS_CLIENT_EVENTS.POST_CREATED, post);
+    return { data: post };
   }
 
   @UseInterceptors(CheckBodyInterceptor)
-  @SubscribeMessage(WS_SERVER_EVENTS.CREATE_REPLY)
-  async handleCreateReply(@MessageBody() body: TCreateReplyDto): Promise<void> {
+  @SubscribeMessage(WS_POST_EVENTS.CREATE_REPLY)
+  async handleCreateReply(
+    @MessageBody() body: ICreateReplyDto,
+  ): Promise<IPostResponse<IPost>> {
     const { postId, reply } = body;
     const post = await this.postService.createReply(postId, reply);
-    this.server.emit(WS_CLIENT_EVENTS.REPLY_CREATED, post);
+    return { data: post };
   }
 
-  @SubscribeMessage(WS_SERVER_EVENTS.GET_ALL_POSTS)
+  @SubscribeMessage(WS_POST_EVENTS.GET_ALL_POSTS)
   async handleGetAllPosts(
-    @MessageBody() body: TGetAllPostsParams,
-  ): Promise<void> {
+    @MessageBody() body: IGetAllPostsParams,
+  ): Promise<IPostResponse<IPost[]>> {
     const { page = 1, sortBy = 'createdAt', sort = 'desc' } = body;
 
-    const take = 5;
+    const take = 25;
     const skip = (page - 1) * take;
 
     const posts = await this.postService.findAll({
@@ -91,13 +91,15 @@ export class PostGateway
       take,
       skip,
     });
-    this.server.emit(WS_CLIENT_EVENTS.RECEIVE_ALL_POSTS, posts);
+    return { data: posts };
   }
 
-  @SubscribeMessage(WS_SERVER_EVENTS.GET_POST)
-  async handleGetPost(@MessageBody() body: TFindPostDto): Promise<void> {
+  @SubscribeMessage(WS_POST_EVENTS.GET_POST)
+  async handleGetPost(
+    @MessageBody() body: IGetPostDto,
+  ): Promise<IPostResponse<IPost>> {
     const { id } = body;
     const post = await this.postService.findOne(id);
-    this.server.emit(WS_CLIENT_EVENTS.RECEIVE_POST, post);
+    return { data: post };
   }
 }

@@ -1,20 +1,28 @@
 import { Post } from '@prisma/client';
 
-export interface TPost extends Post {}
+export interface IPost extends Post {}
 
-export type TCreatePostDto = Omit<TPost, 'id' | 'createdAt'>;
+export type ICreatePostDto = Omit<IPost, 'id' | 'createdAt'>;
 
-export interface TCreateReplyDto {
-  postId: TPost['id'];
-  reply: TCreatePostDto;
+export interface ICreateReplyDto {
+  postId: IPost['id'];
+  reply: ICreatePostDto;
 }
 
-export type TUpdatePostDto = Partial<TCreatePostDto>;
+export type IUpdatePostDto = Partial<ICreatePostDto>;
 
-export type TFindPostDto = Pick<TPost, 'id'>;
+export type IPostId = IPost['id'];
 
-export interface TGetAllPostsParams {
+export interface IGetPostDto {
+  id: IPostId;
+}
+
+export interface IGetAllPostsParams {
   page?: number;
   sortBy?: string;
   sort?: 'asc' | 'desc';
+}
+
+export interface IPostResponse<T> {
+  data: T;
 }
