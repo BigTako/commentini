@@ -11,7 +11,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryStreamedHydration>{children}</ReactQueryStreamedHydration>
-      <ReactQueryDevtools />
+      <ReactQueryDevtools buttonPosition="bottom-left" />
     </QueryClientProvider>
   );
 }
