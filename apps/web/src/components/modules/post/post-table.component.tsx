@@ -4,15 +4,17 @@ import { StyledTableCell } from "@components/table-dashboard/cell.component";
 import { StyledTableRow } from "@components/table-dashboard/row.component";
 
 function PostsTable({ posts }: { posts: IPost[] }) {
+  const tableId = "posts-table";
   return (
     <TableDashboard
+      id={tableId}
       headers={["Username", "Email", "Text", "Created At"]}
       items={posts}
       renderRow={(post) => {
         const { id, username, email, text, createdAt } = post;
         return (
           <StyledTableRow
-            key={id}
+            key={`${tableId}-item-${id}`}
             sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
           >
             <StyledTableCell component="th" scope="row">

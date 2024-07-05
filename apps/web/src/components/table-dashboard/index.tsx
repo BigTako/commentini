@@ -12,11 +12,6 @@ const StyledTableHead = styled(TableHead)`
   }
 `;
 
-interface StyledTableContainerProps {
-  $columnsNum: number;
-  $columWidth: number;
-}
-
 const StyledTableContainer = styled(TableContainer)`
   && {
     background-color: var(--color-primary-100);
@@ -24,27 +19,30 @@ const StyledTableContainer = styled(TableContainer)`
     border-radius: 8px;
     max-height: 500px;
     overflow-y: auto;
-    width: ${(props: StyledTableContainerProps) =>
-      props.$columnsNum * props.$columWidth}px;
+    width: 100%;
   }
 `;
 
 export function TableDashboard<T>({
+  id,
   headers,
   items,
   renderRow,
 }: {
+  id: string;
   headers: string[];
   items: T[];
   renderRow: (_item: T) => JSX.Element;
 }) {
   return (
-    <StyledTableContainer $columWidth={250} $columnsNum={headers.length}>
+    <StyledTableContainer id={id}>
       <Table stickyHeader aria-label="Table of posts">
         <StyledTableHead>
           <TableRow>
-            {headers.map((header) => (
-              <StyledTableCell>{header}</StyledTableCell>
+            {headers.map((header, i) => (
+              <StyledTableCell key={`${id}-header-${i}`}>
+                {header}
+              </StyledTableCell>
             ))}
           </TableRow>
         </StyledTableHead>

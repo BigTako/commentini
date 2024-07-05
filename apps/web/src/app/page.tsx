@@ -2,7 +2,7 @@
 import styled from "@emotion/styled";
 import { useSocket } from "@hooks/useSocket";
 import { usePosts } from "@hooks/usePosts";
-import PostsTable from "@modules/post/post-table.component";
+import PostsContainer from "~/components/modules/post/posts-container.component";
 
 const StyledMainContainer = styled("main")`
   width: 100%;
@@ -22,7 +22,7 @@ export default function Page(): JSX.Element {
         <div style={{ textAlign: "center" }}>Loading...</div>
       )}
       {!isConnected && <div style={{ textAlign: "center" }}>Disconnected</div>}
-      {isConnected && !isLoading && <PostsTable posts={posts} />}
+      {isConnected && !isLoading && <PostsContainer posts={posts} />}
     </StyledMainContainer>
   );
 }
