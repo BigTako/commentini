@@ -1,8 +1,8 @@
 "use client";
 import styled from "@emotion/styled";
-import { useSocket } from "@hooks/useSocket";
 import { usePosts } from "@hooks/usePosts";
 import PostsContainer from "~/components/modules/post/posts-container.component";
+import { useSocket } from "~/contexts/socket.context";
 
 const StyledMainContainer = styled("main")`
   width: 100%;

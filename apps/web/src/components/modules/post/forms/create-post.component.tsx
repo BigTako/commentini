@@ -1,7 +1,11 @@
 import styled from "@emotion/styled";
-import { ICreatePostDto } from "~/components/modules/post/types";
 import { Button, TextField } from "@mui/material";
-import { Formik, Field, Form } from "formik";
+import { Formik, Form } from "formik";
+import { toFormikValidationSchema } from "zod-formik-adapter";
+import { createPostSchema } from "~/components/lib/validations-schemas/post";
+import { ICreatePostDto, IPost } from "../types";
+import { SOCKET_EVENTS } from "~/keys";
+import { useSocket } from "~/contexts/socket.context";
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -14,45 +18,70 @@ const StyledForm = styled(Form)`
 `;
 
 export function CreatePostForm() {
+  const { socket, isConnected } = useSocket();
+
+  const handleSubmit = (values: ICreatePostDto) => {
+    if (isConnected) {
+      socket.emit(
+        SOCKET_EVENTS.CREATE_POST,
+        values,
+        (data: { data: IPost }) => {
+          const { data: post } = data;
+          console.log(post);
+        }
+      );
+    }
+  };
+
   return (
     <Formik
+      onSubmit={handleSubmit}
+      validationSchema={toFormikValidationSchema(createPostSchema)}
       initialValues={{
         username: "",
         email: "",
         text: "",
       }}
-      onSubmit={async (values: ICreatePostDto) => {
-        console.log({ values });
-      }}
     >
-      <StyledForm>
-        <Field
-          size="small"
-          label="Username"
-          name="username"
-          placeholder="Username"
-          component={TextField}
-        />
-        <Field
-          size="small"
-          label="Email"
-          name="email"
-          placeholder="Email"
-          component={TextField}
-        />
-        <Field
-          label="Text"
-          name="text"
-          placeholder="Text"
-          component={TextField}
-          rows={5}
-          maxRows={10}
-          multiline
-        />
-        <Button type="submit" variant="contained" size="large">
-          Submit
-        </Button>
-      </StyledForm>
+      {({ errors, values, setFieldValue }) => (
+        <StyledForm>
+          <TextField
+            error={!!errors.username}
+            helperText={errors?.username ?? ""}
+            size="small"
+            label="Username"
+            name="username"
+            placeholder="Username"
+            value={values["username"]}
+            onChange={(e) => setFieldValue("username", e.target.value)}
+          />
+          <TextField
+            error={!!errors.email}
+            helperText={errors?.email ?? ""}
+            size="small"
+            label="Email"
+            name="email"
+            placeholder="Email"
+            value={values["email"]}
+            onChange={(e) => setFieldValue("email", e.target.value)}
+          />
+          <TextField
+            error={!!errors.text}
+            helperText={errors?.text ?? ""}
+            label="Text"
+            name="text"
+            placeholder="Text"
+            rows={5}
+            maxRows={10}
+            multiline
+            value={values["text"]}
+            onChange={(e) => setFieldValue("text", e.target.value)}
+          />
+          <Button type="submit" variant="contained" size="large">
+            Submit
+          </Button>
+        </StyledForm>
+      )}
     </Formik>
   );
 }

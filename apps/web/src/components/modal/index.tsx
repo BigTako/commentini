@@ -18,7 +18,7 @@ const StyledModalBox = styled(Box)<IModalBoxProps>`
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 5px 10px rgb(0 0 0 / 0.2);
-    transition: all 1s ease-out;
+    transition: all 0.5s ease-out;
   }
 `;
 
