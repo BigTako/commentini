@@ -2,6 +2,12 @@ import { createContext, useContext, useState } from "react";
 
 const ModalContext = createContext({});
 
+interface IModalContext {
+  opened: string;
+  handleOpen: (_id: string) => void;
+  handleClose: () => void;
+}
+
 function ModalProvider({ children }: { children: React.ReactNode }) {
   const [opened, setOpened] = useState("");
 
@@ -26,8 +32,8 @@ function ModalProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-function useModal() {
-  const context = useContext(ModalContext);
+function useModal(): IModalContext {
+  const context = useContext(ModalContext) as IModalContext;
   if (context === undefined)
     throw new Error("ModalContext was used outside the ModalProvider");
   return context;

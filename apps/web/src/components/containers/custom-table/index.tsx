@@ -46,31 +46,29 @@ export function CustomTable({
                 width={column.width}
                 key={`${id}-header-${column.id}`}
               >
-                {column.field}
+                <strong>{column.name}</strong>
               </StyledTableCell>
             ))}
           </TableRow>
         </StyledTableHead>
         <TableBody>
           {rows.map((row, i) => (
-            <>
-              <StyledTableRow
-                key={`${id}-row-${i}`}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                {columns.map((col, i) => (
-                  <StyledTableCell
-                    key={`${id}-cell-${i}`}
-                    align={col.textAlign || "right"}
-                    component="td"
-                    scope="row"
-                  >
-                    {(col.formatField?.(row[col.field]) as ReactNode) ??
-                      (row[col.field] as ReactNode)}
-                  </StyledTableCell>
-                ))}
-              </StyledTableRow>
-            </>
+            <StyledTableRow
+              key={`${id}-row-${i}`}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              {columns.map((col, i) => (
+                <StyledTableCell
+                  key={`${id}-cell-${i}`}
+                  align={col.textAlign || "right"}
+                  component="td"
+                  scope="row"
+                >
+                  {(col.formatField?.(row[col.field]) as ReactNode) ??
+                    (row[col.field] as ReactNode)}
+                </StyledTableCell>
+              ))}
+            </StyledTableRow>
           ))}
         </TableBody>
       </Table>
