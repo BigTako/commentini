@@ -4,6 +4,7 @@ export interface IPost {
   username: string;
   text: string;
   createdAt: string;
+  replies: IPost[];
   [key: string | symbol]: string | Date;
 }
 
@@ -12,3 +13,5 @@ export interface ICreatePostDto {
   email: string;
   text: string;
 }
+
+export type IPostId = IPost["id"];

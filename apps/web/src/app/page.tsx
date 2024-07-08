@@ -1,8 +1,7 @@
 "use client";
 import styled from "@emotion/styled";
-import PostsContainer from "~/components/modules/post/posts-container.component";
-import { usePosts } from "~/components/modules/post/usePosts";
-import { useSocket } from "~/contexts/socket.context";
+import { Button } from "@mui/material";
+import Link from "next/link";
 
 const StyledMainContainer = styled("main")`
   width: 100%;
@@ -12,17 +11,23 @@ const StyledMainContainer = styled("main")`
   align-items: center;
 `;
 
-export default function Page(): JSX.Element {
-  const { isConnected } = useSocket();
-  const { isLoading, posts } = usePosts();
+const StyledHomePage = styled("div")`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  gap: 20px;
+`;
 
+export default function Page(): JSX.Element {
   return (
     <StyledMainContainer>
-      {isConnected && isLoading && (
-        <div style={{ textAlign: "center" }}>Loading...</div>
-      )}
-      {!isConnected && <div style={{ textAlign: "center" }}>Disconnected</div>}
-      {isConnected && !isLoading && <PostsContainer posts={posts} />}
+      <StyledHomePage>
+        <div>Hello, it's homepage</div>
+        <Link href="/posts" style={{ textAlign: "center" }}>
+          <Button variant="outlined">Overview posts</Button>
+        </Link>
+      </StyledHomePage>
     </StyledMainContainer>
   );
 }

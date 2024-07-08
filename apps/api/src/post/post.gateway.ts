@@ -56,7 +56,6 @@ export class PostGateway
   async handleCreatePost(
     @MessageBody(new ZodPipe(createPostSchema, 'ws')) body: ICreatePostDto,
   ): Promise<IPostResponse<IPost>> {
-    console.log('create reply');
     const post = await this.postService.create(body);
     return { data: post };
   }
@@ -82,9 +81,10 @@ export class PostGateway
 
     const posts = await this.postService.findAll({
       where: {
-        replies: {
-          none: {},
-        },
+        parentId: null,
+      },
+      include: {
+        replies: true,
       },
       orderBy: {
         [sortBy]: sort,
