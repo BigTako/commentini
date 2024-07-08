@@ -7,4 +7,5 @@ export const SOCKET_EVENTS = Object.freeze({
   CREATE_REPLY: "create-reply",
   USER_CONNECTED: "user-connected",
   USER_DISCONNECTED: "user-disconnected",
+  SERVER_EXCEPTION: "server-exception",
 });

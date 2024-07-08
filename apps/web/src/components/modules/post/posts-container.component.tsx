@@ -7,7 +7,7 @@ import AddIcon from "@mui/icons-material/AddRounded";
 import { Fab } from "@mui/material";
 import { useModal } from "~/contexts/modal.context";
 import { ModalWindow } from "~/components/modal";
-import { CreatePostForm } from "./forms/create-post.component";
+import { CreatePostForm } from "./forms/create-post-form.component";
 import { useCallback } from "react";
 
 const DesktopContainer = styled("div")`

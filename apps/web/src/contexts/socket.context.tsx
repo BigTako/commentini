@@ -1,7 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
+import toast from "react-hot-toast";
 import { SOCKET_EVENTS } from "~/keys";
 import { socket } from "~/utils/socket";
+import { IServerError } from "~/types";
 
 const SocketContext = createContext({});
 
@@ -24,8 +26,13 @@ function SocketProvider({ children }: { children: React.ReactNode }) {
       setIsConnected(false);
     }
 
+    function onServerException(error: IServerError) {
+      toast.error(error.messages[0] as string);
+    }
+
     socket.on(SOCKET_EVENTS.CONNECT, onConnect);
     socket.on(SOCKET_EVENTS.DISCONNECT, onDisconnect);
+    socket.on(SOCKET_EVENTS.SERVER_EXCEPTION, onServerException);
 
     return () => {
       socket.off(SOCKET_EVENTS.CONNECT, onConnect);

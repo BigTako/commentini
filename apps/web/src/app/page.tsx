@@ -1,7 +1,7 @@
 "use client";
 import styled from "@emotion/styled";
-import { usePosts } from "@hooks/usePosts";
 import PostsContainer from "~/components/modules/post/posts-container.component";
+import { usePosts } from "~/components/modules/post/usePosts";
 import { useSocket } from "~/contexts/socket.context";
 
 const StyledMainContainer = styled("main")`
@@ -13,8 +13,8 @@ const StyledMainContainer = styled("main")`
 `;
 
 export default function Page(): JSX.Element {
-  const { socket, isConnected } = useSocket();
-  const { isLoading, posts } = usePosts({ socket, isConnected });
+  const { isConnected } = useSocket();
+  const { isLoading, posts } = usePosts();
 
   return (
     <StyledMainContainer>

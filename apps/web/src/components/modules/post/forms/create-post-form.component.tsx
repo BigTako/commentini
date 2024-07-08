@@ -2,10 +2,12 @@ import styled from "@emotion/styled";
 import { Button, TextField } from "@mui/material";
 import { Formik, Form } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
+import toast from "react-hot-toast";
 import { createPostSchema } from "~/components/lib/validations-schemas/post";
-import { ICreatePostDto, IPost } from "../types";
-import { SOCKET_EVENTS } from "~/keys";
-import { useSocket } from "~/contexts/socket.context";
+import { ICreatePostDto } from "../types";
+import { useCallback } from "react";
+import { useCreatePost } from "../useCreatePost";
+import { useModal } from "~/contexts/modal.context";
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -18,20 +20,17 @@ const StyledForm = styled(Form)`
 `;
 
 export function CreatePostForm() {
-  const { socket, isConnected } = useSocket();
+  const { handleClose } = useModal();
+  const { createPost, isCreating } = useCreatePost({
+    onSuccess: () => {
+      handleClose();
+      toast.success("Post created");
+    },
+  });
 
-  const handleSubmit = (values: ICreatePostDto) => {
-    if (isConnected) {
-      socket.emit(
-        SOCKET_EVENTS.CREATE_POST,
-        values,
-        (data: { data: IPost }) => {
-          const { data: post } = data;
-          console.log(post);
-        }
-      );
-    }
-  };
+  const handleSubmit = useCallback((values: ICreatePostDto) => {
+    createPost(values);
+  }, []);
 
   return (
     <Formik
@@ -77,7 +76,12 @@ export function CreatePostForm() {
             value={values["text"]}
             onChange={(e) => setFieldValue("text", e.target.value)}
           />
-          <Button type="submit" variant="contained" size="large">
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            disabled={isCreating}
+          >
             Submit
           </Button>
         </StyledForm>
