@@ -1,6 +1,10 @@
-import { CustomTableColumn } from "~/components/containers/custom-table/types";
+import {
+  CustomTableColumn,
+  CustomTableRow,
+} from "~/components/containers/custom-table/types";
 import { IPost } from "./types";
 import { CustomTable } from "~/components/containers";
+import { useRouter } from "next/navigation";
 
 const columns: CustomTableColumn[] = [
   {
@@ -34,7 +38,21 @@ const columns: CustomTableColumn[] = [
 
 function PostsTable({ posts }: { posts: IPost[] }) {
   const tableId = "posts-table";
-  return <CustomTable id={tableId} columns={columns} rows={posts} />;
+  const router = useRouter();
+
+  const handleRowClick = (row: CustomTableRow) => {
+    const post = row as IPost;
+    router.push(`posts/${post.id}`);
+  };
+
+  return (
+    <CustomTable
+      id={tableId}
+      columns={columns}
+      onRowClick={handleRowClick}
+      rows={posts}
+    />
+  );
 }
 
 export default PostsTable;

@@ -12,3 +12,5 @@ export interface ICreatePostDto {
   email: string;
   text: string;
 }
+
+export type IPostId = IPost["id"];

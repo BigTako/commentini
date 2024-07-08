@@ -7,7 +7,6 @@ import TableRow from "@mui/material/TableRow";
 import { StyledTableRow } from "./row.component";
 import { ReactNode } from "react";
 import { CustomTableColumn, CustomTableRow } from "./types";
-import { TableCell } from "@mui/material";
 import { StyledTableCell } from "./cell.component";
 
 const StyledTableHead = styled(TableHead)`
@@ -31,10 +30,12 @@ export function CustomTable({
   id,
   columns,
   rows,
+  onRowClick,
 }: {
   id: string;
   columns: CustomTableColumn[];
   rows: CustomTableRow[];
+  onRowClick?: (_row: CustomTableRow) => void;
 }) {
   return (
     <StyledTableContainer id={id}>
@@ -55,8 +56,12 @@ export function CustomTable({
         <TableBody>
           {rows.map((row, i) => (
             <StyledTableRow
+              onClick={() => onRowClick?.(row)}
               key={`${id}-row-${i}`}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              sx={{
+                "&:last-child td, &:last-child th": { border: 0 },
+                cursor: "pointer",
+              }}
             >
               {columns.map((column, i) => (
                 <StyledTableCell
