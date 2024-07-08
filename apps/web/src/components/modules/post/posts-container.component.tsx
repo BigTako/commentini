@@ -11,7 +11,7 @@ import { CreatePostForm } from "./forms/create-post-form.component";
 import { useCallback } from "react";
 
 const DesktopContainer = styled("div")`
-  max-width: 800px;
+  // max-width: 1000px;
   position: relative;
 `;
 

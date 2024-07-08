@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
-import { TableRow, TableRowProps } from "@mui/material";
+import { TableRow } from "@mui/material";
 
-const _StyledTableRow = styled(TableRow)`
+export const StyledTableRow = styled(TableRow)`
   &:nth-of-type(even) {
     background-color: var(--color-primary-200);
   }
@@ -10,7 +10,3 @@ const _StyledTableRow = styled(TableRow)`
     border: 0;
   }
 `;
-
-export function StyledTableRow(props: TableRowProps) {
-  return <_StyledTableRow {...props} />;
-}

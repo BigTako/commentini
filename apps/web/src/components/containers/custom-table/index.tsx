@@ -4,10 +4,11 @@ import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { StyledTableCell } from "./cell.component";
 import { StyledTableRow } from "./row.component";
 import { ReactNode } from "react";
 import { CustomTableColumn, CustomTableRow } from "./types";
+import { TableCell } from "@mui/material";
+import { StyledTableCell } from "./cell.component";
 
 const StyledTableHead = styled(TableHead)`
   & > tr > th {
@@ -42,8 +43,8 @@ export function CustomTable({
           <TableRow>
             {columns.map((column) => (
               <StyledTableCell
+                $maxWidth={column.width}
                 align={column.textAlign || "right"}
-                width={column.width}
                 key={`${id}-header-${column.id}`}
               >
                 <strong>{column.name}</strong>
@@ -57,15 +58,16 @@ export function CustomTable({
               key={`${id}-row-${i}`}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              {columns.map((col, i) => (
+              {columns.map((column, i) => (
                 <StyledTableCell
                   key={`${id}-cell-${i}`}
-                  align={col.textAlign || "right"}
+                  align={column.textAlign || "right"}
+                  $maxWidth={column.width}
                   component="td"
                   scope="row"
                 >
-                  {(col.formatField?.(row[col.field]) as ReactNode) ??
-                    (row[col.field] as ReactNode)}
+                  {(column.formatField?.(row[column.field]) as ReactNode) ??
+                    (row[column.field] as ReactNode)}
                 </StyledTableCell>
               ))}
             </StyledTableRow>

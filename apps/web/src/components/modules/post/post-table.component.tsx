@@ -21,7 +21,7 @@ const columns: CustomTableColumn[] = [
     id: 3,
     name: "Text",
     field: "text",
-    width: 200,
+    width: 300,
   },
   {
     id: 4,
