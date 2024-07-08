@@ -4,6 +4,7 @@ export interface IPost {
   username: string;
   text: string;
   createdAt: string;
+  replies: IPost[];
   [key: string | symbol]: string | Date;
 }
 

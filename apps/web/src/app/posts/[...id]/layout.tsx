@@ -11,7 +11,7 @@ const StyledMainContainer = styled("main")`
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 const StyledPostPageContainer = styled("div")<IPostPageContainerProps>`
