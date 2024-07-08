@@ -6,3 +6,9 @@ export interface IPost {
   createdAt: string;
   [key: string | symbol]: string | Date;
 }
+
+export interface ICreatePostDto {
+  username: string;
+  email: string;
+  text: string;
+}

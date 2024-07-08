@@ -1,32 +1,35 @@
-import { useQueryClient } from "@tanstack/react-query";
-import React from "react";
-import { Socket } from "socket.io-client";
+import { useQuery } from "@tanstack/react-query";
 import { SOCKET_EVENTS } from "@keys";
 import { IPost } from "./types";
+import { useSocket } from "~/contexts/socket.context";
+import { Socket } from "socket.io-client";
 
-export function usePosts({
-  socket,
-  isConnected,
-}: {
-  socket: Socket;
-  isConnected: boolean;
-}) {
-  const queryClient = useQueryClient();
-  const [isLoading, setIsLoading] = React.useState(false);
-  const posts = queryClient.getQueryData<IPost[]>(["posts"]) || [];
-  React.useEffect(() => {
-    if (isConnected) {
-      setIsLoading(true);
-      socket.emit(
-        SOCKET_EVENTS.GET_ALL_POSTS,
-        {},
-        (data: { data: IPost[] }) => {
-          const { data: posts } = data;
-          queryClient.setQueryData(["posts"], posts);
-          setIsLoading(false);
+const fetchPosts = (socket: Socket) => {
+  return new Promise<IPost[]>((resolve, reject) => {
+    socket.emit(
+      SOCKET_EVENTS.GET_ALL_POSTS,
+      {},
+      (response: { data: IPost[] }) => {
+        if (response.data) {
+          resolve(response.data);
+        } else {
+          reject(new Error("Failed to fetch posts"));
         }
-      );
-    }
-  }, [isConnected]);
-  return { isLoading, posts };
+      }
+    );
+  });
+};
+
+export function usePosts() {
+  const { socket, isConnected } = useSocket();
+
+  const { isLoading, data, error } = useQuery({
+    queryKey: ["posts"],
+    queryFn: () => fetchPosts(socket),
+    enabled: isConnected,
+  });
+
+  const posts = data || [];
+
+  return { isLoading, posts, error };
 }

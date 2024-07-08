@@ -5,7 +5,7 @@ import { CustomTable } from "~/components/containers";
 const columns: CustomTableColumn[] = [
   {
     id: 1,
-    name: "Username User",
+    name: "Username",
     field: "username",
     textAlign: "center" as const,
     width: 200,
@@ -21,7 +21,7 @@ const columns: CustomTableColumn[] = [
     id: 3,
     name: "Text",
     field: "text",
-    width: 200,
+    width: 300,
   },
   {
     id: 4,

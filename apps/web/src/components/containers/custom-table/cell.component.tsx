@@ -1,17 +1,21 @@
 import styled from "@emotion/styled";
-import { TableCell, TableCellProps } from "@mui/material";
+import { TableCell } from "@mui/material";
 
-interface StyledTableCellProps {
-  $maxWidth?: number;
+interface IStyledTableCellProps {
+  $maxWidth?: number | string;
 }
 
-const _StyledTableCell = styled(TableCell)<StyledTableCellProps>`
-  max-width: ${(props) => props.$maxWidth || 250}px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+export const StyledTableCell = styled(TableCell)<IStyledTableCellProps>`
+  & {
+    max-width: ${(props) => {
+      if (typeof props.$maxWidth === "string") {
+        return props.$maxWidth;
+      } else {
+        return `${props.$maxWidth}px`;
+      }
+    }};
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
-
-export function StyledTableCell(props: TableCellProps) {
-  return <_StyledTableCell {...props} />;
-}

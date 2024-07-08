@@ -4,6 +4,7 @@ import { IPost } from "../../types";
 import { PostCardVoteMenu } from "./vote-menu.component";
 import { PostCardUserAvatar } from "./user-avatar.component";
 import { PostCardTitle } from "./title.component";
+import { useScreenSize } from "~/hooks/useScreenSize";
 
 const StyledCardHeader = styled(CardHeader)`
   & {
@@ -16,11 +17,12 @@ const StyledCardHeader = styled(CardHeader)`
 `;
 
 export function PostCardHeader({ post }: { post: IPost }) {
+  const { isMobile } = useScreenSize();
   const { username, createdAt } = post;
   return (
     <StyledCardHeader
       avatar={<PostCardUserAvatar username={username} />}
-      action={<PostCardVoteMenu />}
+      action={!isMobile && <PostCardVoteMenu marginTop="5%" />}
       title={
         <PostCardTitle
           username={username}

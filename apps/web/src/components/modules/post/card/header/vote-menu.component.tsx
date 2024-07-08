@@ -12,15 +12,19 @@ const StyledVoteMenuText = styled(Typography)`
   }
 `;
 
-const StyledVoteMenu = styled("div")`
+interface VoteMenuProps {
+  $marginTop?: string;
+}
+
+const StyledVoteMenu = styled("div")<VoteMenuProps>`
   display: flex;
   gap: 10px;
-  margin-top: 5%;
+  margin-top: ${(props) => props.$marginTop};
 `;
 
-export function PostCardVoteMenu() {
+export function PostCardVoteMenu({ marginTop }: { marginTop?: string }) {
   return (
-    <StyledVoteMenu>
+    <StyledVoteMenu $marginTop={marginTop}>
       <IconButton aria-label="like button">
         <KeyboardArrowUpIcon />
       </IconButton>
