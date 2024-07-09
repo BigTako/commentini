@@ -1,12 +1,18 @@
+import toast from "react-hot-toast";
+import { useCallback } from "react";
 import { createPostSchema } from "~/components/lib/validations-schemas/post";
 import { ICreatePostDto } from "../types";
 import { PostForm } from "./post-form.component";
-import { useCreatePost } from "../useCreatePost";
-import toast from "react-hot-toast";
-import { useCallback } from "react";
+import { useParams } from "next/navigation";
+import { useCreateReply } from "../useCreateReply";
 
-export function CreatePostForm({ onCancel }: { onCancel: () => void }) {
-  const { createPost, isCreating } = useCreatePost({
+export function CreateReplyForm({ onCancel }: { onCancel: () => void }) {
+  const params = useParams<{ id: string[] }>();
+
+  const postId = params.id[0] as string;
+
+  const { createReply, isCreating } = useCreateReply({
+    postId,
     onSuccess: () => {
       onCancel();
       toast.success("Post created");
@@ -14,7 +20,7 @@ export function CreatePostForm({ onCancel }: { onCancel: () => void }) {
   });
 
   const onSubmit = useCallback((values: ICreatePostDto) => {
-    createPost(values);
+    createReply({ postId, reply: values });
   }, []);
 
   return (

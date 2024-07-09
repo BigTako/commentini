@@ -24,7 +24,7 @@ function FullPostCard({ post }: { post: IPost }) {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {post.replies.map((reply) => (
-              <div style={{ marginLeft: "20px" }}>
+              <div style={{ marginLeft: "20px" }} key={`post-reply-${post.id}`}>
                 <ListItem sx={{ padding: 0 }}>
                   <FullPostCard post={reply} />
                 </ListItem>

@@ -1,17 +1,16 @@
+import { useCallback } from "react";
 import styled from "@emotion/styled";
+import AddIcon from "@mui/icons-material/AddRounded";
+import { Fab } from "@mui/material";
 import { IPost } from "~/components/modules/post/types";
 import { useScreenSize } from "~/hooks/useScreenSize";
 import PostsTable from "@modules/post/post-table.component";
 import PostsList from "~/components/modules/post/posts-list.component";
-import AddIcon from "@mui/icons-material/AddRounded";
-import { Fab } from "@mui/material";
 import { useModal } from "~/contexts/modal.context";
 import { ModalWindow } from "~/components/modal";
-import { CreatePostForm } from "./forms/create-post-form.component";
-import { useCallback } from "react";
+import { CreatePostForm } from "./forms";
 
 const DesktopContainer = styled("div")`
-  // max-width: 1000px;
   position: relative;
 `;
 
@@ -46,6 +45,12 @@ function PostsContainer({ posts }: { posts: IPost[] }) {
     handleOpen("create-post-modal");
   }, []);
 
+  const { handleClose } = useModal();
+
+  const handleCancel = useCallback(() => {
+    handleClose();
+  }, []);
+
   return (
     <>
       {isDesktop && (
@@ -66,7 +71,7 @@ function PostsContainer({ posts }: { posts: IPost[] }) {
         <AddIcon />
       </StyledFab>
       <ModalWindow width={width} name="create-post-modal" title="Create post">
-        <CreatePostForm />
+        <CreatePostForm onCancel={handleCancel} />
       </ModalWindow>
     </>
   );
