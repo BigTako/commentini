@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import PostCard from "~/components/modules/post/card";
 import { IPost } from "~/components/modules/post/types";
-import { usePost } from "~/components/modules/post/usePost";
+import { usePostQuery } from "~/contexts/post-query.context";
 
 function FullPostCard({ post }: { post: IPost }) {
   const [expanded, setExpanded] = useState(false);
@@ -42,7 +42,8 @@ export default function PostPage() {
 
   const id = params.id[0] as string;
 
-  const { isLoading, post } = usePost({ id });
+  const postQuery = usePostQuery();
+  const { isLoading, data: post } = postQuery.usePost(id);
   const isPostFound = !isLoading && post;
 
   if (!post) {

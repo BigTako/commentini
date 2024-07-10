@@ -70,7 +70,10 @@ function PostCard({
               padding: "10px",
             }}
           >
-            <CreateReplyForm onCancel={handleCancelReplyCreate} />
+            <CreateReplyForm
+              postId={post.id}
+              onCancel={handleCancelReplyCreate}
+            />
           </div>
         ) : (
           <div
