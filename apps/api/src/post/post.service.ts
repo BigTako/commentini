@@ -15,7 +15,21 @@ export class PostService {
     const post = await this.prismaService.post.findUnique({
       where: { id },
       include: {
-        replies: true,
+        replies: {
+          include: {
+            replies: {
+              include: {
+                replies: true,
+              },
+              orderBy: {
+                createdAt: 'desc',
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
       },
     });
 

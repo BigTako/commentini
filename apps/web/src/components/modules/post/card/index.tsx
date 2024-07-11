@@ -8,6 +8,7 @@ import { PostCardVoteMenu } from "./header/vote-menu.component";
 import { useScreenSize } from "~/hooks/useScreenSize";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import React, { Dispatch, SetStateAction } from "react";
+import { CreateReplyMenu } from "./create-reply-menu.component";
 
 const StyledCard = styled(Card)`
   & {
@@ -51,7 +52,11 @@ function PostCard({
     <StyledCard>
       <PostCardHeader post={post} />
       <PostCardBody post={post} />
-      <CardActions>
+      <CardActions
+        style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+      >
+        <CreateReplyMenu postId={post.id} />
+
         {isMobile && <PostCardVoteMenu marginTop="0" />}
         {withReplies && (
           <StyledShowRepliesMenu>

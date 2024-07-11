@@ -11,10 +11,9 @@ module.exports = {
       "warn",
       {
         vars: "all",
-        args: "after-used",
+        args: "none",
         ignoreRestSiblings: true,
         varsIgnorePattern: "^_", // Ignore variables that start with an underscore
-        argsIgnorePattern: "^_", // Optionally, ignore function arguments that start with an underscore
       },
     ],
   },

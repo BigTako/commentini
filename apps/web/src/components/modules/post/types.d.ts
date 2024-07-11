@@ -8,10 +8,15 @@ export interface IPost {
   [key: string | symbol]: string | Date;
 }
 
+export type IPostId = IPost["id"];
+
 export interface ICreatePostDto {
   username: string;
   email: string;
   text: string;
 }
 
-export type IPostId = IPost["id"];
+export interface ICreateReplyDto {
+  postId: IPostId;
+  reply: ICreatePostDto;
+}

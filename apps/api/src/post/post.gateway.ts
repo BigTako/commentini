@@ -83,9 +83,6 @@ export class PostGateway
       where: {
         parentId: null,
       },
-      include: {
-        replies: true,
-      },
       orderBy: {
         [sortBy]: sort,
       },
