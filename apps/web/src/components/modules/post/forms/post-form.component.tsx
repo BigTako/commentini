@@ -9,7 +9,7 @@ const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
   gap: 20px;
-
+  width: 100%;
   & > button[type="submit"] {
     background-color: var(--color-other-violet);
   }

@@ -7,8 +7,8 @@ import { PostCardBody } from "./body";
 import { PostCardVoteMenu } from "./header/vote-menu.component";
 import { useScreenSize } from "~/hooks/useScreenSize";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
-import { CreateReplyForm } from "../forms";
+import React, { Dispatch, SetStateAction } from "react";
+import { CreateReplyMenu } from "./create-reply-menu.component";
 
 const StyledCard = styled(Card)`
   & {
@@ -45,14 +45,8 @@ function PostCard({
   expanded: boolean;
   setExpanded: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [replyFormOpened, setReplyFormOpened] = useState(false);
-
   const { isMobile } = useScreenSize();
   const withReplies = !!post.replies && post.replies.length > 0;
-
-  const handleCancelReplyCreate = useCallback(() => {
-    setReplyFormOpened(false);
-  }, []);
 
   return (
     <StyledCard>
@@ -61,36 +55,7 @@ function PostCard({
       <CardActions
         style={{ display: "flex", flexDirection: "column", gap: "10px" }}
       >
-        {replyFormOpened ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              padding: "10px",
-            }}
-          >
-            <CreateReplyForm
-              postId={post.id}
-              onCancel={handleCancelReplyCreate}
-            />
-          </div>
-        ) : (
-          <div
-            style={{
-              width: "100%",
-              borderRadius: "20px",
-              backgroundColor: "var(--color-primary-200)",
-              color: "var(--color-primary-500)",
-              padding: "10px",
-              fontSize: "14px",
-              cursor: "pointer",
-            }}
-            onClick={() => setReplyFormOpened((v) => !v)}
-          >
-            Add comment...
-          </div>
-        )}
+        <CreateReplyMenu postId={post.id} />
 
         {isMobile && <PostCardVoteMenu marginTop="0" />}
         {withReplies && (
