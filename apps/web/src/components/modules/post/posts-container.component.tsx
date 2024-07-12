@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
-import { IPost } from "~/components/modules/post/types";
 import { useScreenSize } from "~/hooks/useScreenSize";
 import PostsTable from "@modules/post/post-table.component";
 import PostsList from "~/components/modules/post/posts-list.component";
+import { usePostQuery } from "~/contexts/post-query.context";
 
 const DesktopContainer = styled("div")`
   position: relative;
@@ -14,8 +14,21 @@ const MobileContainer = styled("div")`
   padding: 10px;
 `;
 
-function PostsContainer({ posts }: { posts: IPost[] }) {
+function PostsContainer() {
   const { isDesktop } = useScreenSize();
+  const postQuery = usePostQuery();
+
+  const { isLoading, data: posts } = postQuery.usePosts();
+
+  const isNothingIsPosted = !posts || posts.length === 0;
+
+  if (isLoading) {
+    return <div style={{ textAlign: "center" }}>Loading...</div>;
+  }
+
+  if (isNothingIsPosted) {
+    return <div style={{ textAlign: "center" }}>Nothing is posted</div>;
+  }
 
   return (
     <>

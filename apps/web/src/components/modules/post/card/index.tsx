@@ -38,12 +38,12 @@ const StyledShowRepliesMenu = styled("div")`
 
 function PostCard({
   post,
-  expanded,
+  expanded = false,
   setExpanded,
 }: {
   post: IPost;
-  expanded: boolean;
-  setExpanded: Dispatch<SetStateAction<boolean>>;
+  expanded?: boolean;
+  setExpanded?: Dispatch<SetStateAction<boolean>>;
 }) {
   const { isMobile } = useScreenSize();
   const withReplies = !!post.replies && post.replies.length > 0;
