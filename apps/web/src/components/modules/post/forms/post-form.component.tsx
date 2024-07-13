@@ -4,6 +4,7 @@ import { Formik, Form } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { ICreatePostDto } from "../types";
 import { ZodSchema } from "zod";
+import { RichTextEditor } from "~/components/rich-text-editor.component";
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -78,7 +79,9 @@ export function PostForm({
             value={values["email"]}
             onChange={(e) => setFieldValue("email", e.target.value)}
           />
-          <TextField
+          <RichTextEditor onChange={(value) => setFieldValue("text", value)} />
+
+          {/* <TextField
             error={!!errors.text}
             helperText={errors?.text ?? ""}
             label="Text"
@@ -89,7 +92,7 @@ export function PostForm({
             multiline
             value={values["text"]}
             onChange={(e) => setFieldValue("text", e.target.value)}
-          />
+          /> */}
           <StyledPostFormMenu>
             <Button
               type="button"

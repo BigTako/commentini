@@ -4,10 +4,9 @@ import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { StyledTableRow } from "./row.component";
 import { ReactNode } from "react";
 import { CustomTableColumn, CustomTableRow } from "./types";
-import { StyledTableCell } from "./cell.component";
+import { TableCell, TableCellProps } from "@mui/material";
 
 const StyledTableHead = styled(TableHead)`
   & > tr > th {
@@ -23,6 +22,37 @@ const StyledTableContainer = styled(TableContainer)`
     max-height: 500px;
     overflow-y: auto;
     width: 100%;
+  }
+`;
+
+interface IStyledTableCellProps {
+  $maxWidth?: number | string;
+}
+
+const StyledTableCell = styled(TableCell)<
+  IStyledTableCellProps & TableCellProps
+>`
+  & {
+    max-width: ${(props) => {
+      if (typeof props.$maxWidth === "string") {
+        return props.$maxWidth;
+      } else {
+        return `${props.$maxWidth}px`;
+      }
+    }};
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+`;
+
+const StyledTableRow = styled(TableRow)`
+  &:nth-of-type(even) {
+    background-color: var(--color-primary-200);
+  }
+  &:last-child td,
+  &:last-child th {
+    border: 0;
   }
 `;
 
