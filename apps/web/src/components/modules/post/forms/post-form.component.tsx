@@ -79,20 +79,10 @@ export function PostForm({
             value={values["email"]}
             onChange={(e) => setFieldValue("email", e.target.value)}
           />
-          <RichTextEditor onChange={(value) => setFieldValue("text", value)} />
-
-          {/* <TextField
-            error={!!errors.text}
-            helperText={errors?.text ?? ""}
-            label="Text"
-            name="text"
-            placeholder="Text"
-            rows={5}
-            maxRows={10}
-            multiline
-            value={values["text"]}
-            onChange={(e) => setFieldValue("text", e.target.value)}
-          /> */}
+          <RichTextEditor
+            error={errors.text}
+            onChange={(value) => setFieldValue("text", value)}
+          />
           <StyledPostFormMenu>
             <Button
               type="button"

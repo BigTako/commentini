@@ -1,4 +1,5 @@
 import { CardContent, styled, Typography } from "@mui/material";
+import ReactHtmlParser from "react-html-parser";
 import { IPost } from "../../types";
 
 const StyledCardText = styled(Typography)`
@@ -10,7 +11,7 @@ export function PostCardBody({ post }: { post: IPost }) {
   const { text } = post;
   return (
     <CardContent>
-      <StyledCardText>{text}</StyledCardText>
+      <StyledCardText>{ReactHtmlParser(text)}</StyledCardText>
     </CardContent>
   );
 }
