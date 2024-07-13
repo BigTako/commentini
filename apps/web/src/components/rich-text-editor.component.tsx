@@ -12,15 +12,30 @@ const Editor = dynamic(
   { ssr: false }
 );
 
-const StyledEditor = styled(Editor)`
+const StyledEditor = styled("div")`
   & {
-    box-sizing: border-box;
     .rdw-editor-toolbar {
-      box-sizing: border-box;
+      background-color: var(--color-primary-200);
+    }
+
+    .rdw-editor-main {
+      background-color: var(--color-primary-100);
+      padding: 0 10px;
+    }
+
+    .rdw-option-wrapper,
+    .rdw-dropdown-wrapper {
+      background-color: var(--color-primary-200);
+      border: none;
+    }
+
+    .rdw-option-wrapper:hover,
+    .rdw-dropdown-wrapper:hover {
+      background-color: var(--color-primary-300);
+      border: none;
     }
   }
 `;
-
 export function RichTextEditor({
   onChange,
 }: {
@@ -41,20 +56,15 @@ export function RichTextEditor({
   }, [editorState]);
 
   return (
-    <StyledEditor
-      editorState={editorState}
-      onEditorStateChange={onEditorStateChange}
-      toolbarStyle={{
-        backgroundColor: "var(--color-primary-200)",
-      }}
-      editorStyle={{
-        backgroundColor: "var(--color-primary-100)",
-        padding: "0 10px",
-      }}
-      wrapperClassName="wrapper-class"
-      editorClassName="editor-class"
-      toolbarClassName="toolbar-class"
-      toolbar={{}}
-    />
+    <StyledEditor>
+      <Editor
+        editorState={editorState}
+        onEditorStateChange={onEditorStateChange}
+        wrapperClassName="wrapper-class"
+        editorClassName="editor-class"
+        toolbarClassName="toolbar-class"
+        toolbar={{}}
+      />
+    </StyledEditor>
   );
 }
