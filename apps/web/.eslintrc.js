@@ -1,5 +1,9 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
+  env: {
+    browser: true, // This line is important
+    es2021: true,
+  },
   root: true,
   extends: ["@repo/eslint-config/next.js"],
   parser: "@typescript-eslint/parser",

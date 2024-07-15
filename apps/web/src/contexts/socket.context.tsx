@@ -37,6 +37,7 @@ function SocketProvider({ children }: { children: React.ReactNode }) {
     return () => {
       socket.off(SOCKET_EVENTS.CONNECT, onConnect);
       socket.off(SOCKET_EVENTS.DISCONNECT, onDisconnect);
+      socket.off(SOCKET_EVENTS.SERVER_EXCEPTION, onServerException);
     };
   }, [isConnected]);
 

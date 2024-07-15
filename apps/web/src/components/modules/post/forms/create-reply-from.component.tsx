@@ -1,9 +1,14 @@
 import toast from "react-hot-toast";
 import { useCallback } from "react";
+import dynamic from "next/dynamic";
 import { createPostSchema } from "~/components/lib/validations-schemas/post";
 import { ICreatePostDto, IPostId } from "../types";
-import { PostForm } from "./post-form.component";
 import { usePostQuery } from "~/contexts/post-query.context";
+
+const PostForm = dynamic(
+  () => import("./post-form.component").then((mod) => mod.PostForm),
+  { ssr: false }
+);
 
 export function CreateReplyForm({
   postId,

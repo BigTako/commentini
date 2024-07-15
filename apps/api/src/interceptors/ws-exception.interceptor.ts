@@ -12,6 +12,9 @@ export class WsExceptionInterceptor implements NestInterceptor {
   intercept(_: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       catchError((error) => {
+        if (error instanceof WsException) {
+          throw error;
+        }
         throw new WsException(error);
       }),
     );
