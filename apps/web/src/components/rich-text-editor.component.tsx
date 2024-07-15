@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { EditorState, convertToRaw } from "draft-js";
+import { EditorState, ContentState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "draft-js/dist/Draft.css";
 import { styled } from "@mui/material";
@@ -12,6 +13,12 @@ const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
   { ssr: false }
 );
+
+interface ITextEditorProps {
+  value: string;
+  error: string | undefined;
+  setFieldValue: (val: string) => void;
+}
 
 const StyledEditor = styled("div")`
   display: flex;
@@ -42,30 +49,34 @@ const StyledEditor = styled("div")`
     }
   }
   .editor-error {
+    font-size: 14px;
     color: ${red[700]};
     padding-left: 10px;
   }
 `;
 export function RichTextEditor({
   error,
-  onChange,
-}: {
-  error?: string;
-  onChange: (value: string) => void;
-}) {
-  const [editorState, setEditorState] = useState<EditorState>(
-    EditorState.createEmpty()
-  );
-
-  const onEditorStateChange = (newEditorState: EditorState): void => {
-    setEditorState(newEditorState);
+  value,
+  setFieldValue,
+}: ITextEditorProps) {
+  const prepareDraft = (value: string) => {
+    const draft = htmlToDraft(value);
+    const contentState = ContentState.createFromBlockArray(draft.contentBlocks);
+    const editorState = EditorState.createWithContent(contentState);
+    return editorState;
   };
 
-  useEffect(() => {
-    const rawContentState = convertToRaw(editorState.getCurrentContent());
-    const htmlContent = draftToHtml(rawContentState);
-    onChange(htmlContent);
-  }, [editorState]);
+  const [editorState, setEditorState] = useState(
+    value ? prepareDraft(value) : EditorState.createEmpty()
+  );
+
+  const onEditorStateChange = (editorState: EditorState) => {
+    const forFormik = draftToHtml(
+      convertToRaw(editorState.getCurrentContent())
+    );
+    setFieldValue(forFormik);
+    setEditorState(editorState);
+  };
 
   return (
     <StyledEditor>
