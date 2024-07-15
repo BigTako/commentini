@@ -1,7 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/services/prisma.service';
 import { Prisma } from '@prisma/client';
-import { ICreatePostDto, IPost, IPostId, IUpdatePostDto } from './post';
+import {
+  ICreatePostDto,
+  IPost,
+  IPostId,
+  IPostWithReplies,
+  IUpdatePostDto,
+} from './post';
+import { postRepliesToJSON } from '../utils/postRepliesToJSON';
 
 @Injectable()
 export class PostService {
@@ -11,33 +18,36 @@ export class PostService {
     return posts;
   }
 
-  async findOne(id: IPostId): Promise<IPost> {
+  async findOne(id: IPostId): Promise<IPostWithReplies> {
     const post = await this.prismaService.post.findUnique({
       where: { id },
-      include: {
-        replies: {
-          include: {
-            replies: {
-              include: {
-                replies: true,
-              },
-              orderBy: {
-                createdAt: 'desc',
-              },
-            },
-          },
-          orderBy: {
-            createdAt: 'desc',
-          },
-        },
-      },
     });
 
     if (!post) {
       throw new NotFoundException('No Post Found');
     }
 
-    return post;
+    const data = (await this.prismaService.$queryRaw`
+      WITH RECURSIVE replies_cte AS (
+        SELECT id, email, username, text, "createdAt", "parentId"
+        FROM post
+        WHERE "parentId" = ${post.id}
+  
+        UNION ALL
+  
+        SELECT p.id, p.email, p.username, p.text, p."createdAt", p."parentId"
+        FROM post p
+        INNER JOIN replies_cte r ON p."parentId" = r.id
+      )
+      SELECT * FROM replies_cte ORDER BY "createdAt" DESC;
+    `) as IPost[];
+
+    const postReplies = postRepliesToJSON({ post, rawData: data });
+    const postWithReplies = {
+      ...post,
+      replies: postReplies,
+    };
+    return postWithReplies;
   }
 
   async create(data: ICreatePostDto): Promise<IPost> {
