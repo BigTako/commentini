@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
 import { PostModule } from './post/post.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [PostModule],
+  imports: [PostModule, AuthModule],
   controllers: [AppController],
   providers: [
     AppService,
