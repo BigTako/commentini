@@ -11,6 +11,22 @@ import {
 
 const PostQueryContext = createContext({});
 
+type IMutationOnSuccess =
+  | ((
+      data: unknown,
+      variables: ICreatePostDto,
+      context: unknown
+    ) => Promise<unknown> | unknown)
+  | undefined;
+
+type IMutationOnError =
+  | ((
+      error: Error,
+      variables: ICreatePostDto,
+      context: unknown
+    ) => Promise<unknown> | unknown)
+  | undefined;
+
 interface IQueryResult<T> {
   isLoading: boolean;
   data: T;
@@ -20,18 +36,26 @@ interface IQueryResult<T> {
 interface IPostQueryContext {
   usePosts: () => IQueryResult<IPost[]>;
   usePost: (id: IPostId) => IQueryResult<IPost>;
-  useCreatePost: ({ onSuccess }: { onSuccess?: () => void }) => {
-    createPost: (data: ICreatePostDto) => IPost;
+  useCreatePost: ({
+    onSuccess,
+    onError,
+  }: {
+    onSuccess: IMutationOnSuccess;
+    onError: IMutationOnError;
+  }) => {
+    createPost: (data: ICreatePostDto) => Promise<IPost>;
     isCreating: boolean;
   };
   useCreateReply: ({
     postId,
     onSuccess,
+    onError,
   }: {
     postId: IPostId;
-    onSuccess?: () => void;
+    onSuccess: IMutationOnSuccess;
+    onError: IMutationOnError;
   }) => {
-    createReply: (data: ICreateReplyDto) => IPost;
+    createReply: (data: ICreateReplyDto) => Promise<IPost>;
     isCreating: boolean;
   };
 }
@@ -69,7 +93,13 @@ function PostQueryProvider({ children }: { children: React.ReactNode }) {
   );
 
   const useCreatePost = useCallback(
-    function ({ onSuccess }: { onSuccess?: () => void }) {
+    function ({
+      onSuccess,
+      onError,
+    }: {
+      onSuccess?: () => void;
+      onError?: () => void;
+    }) {
       const { mutate: createPost, isPending: isCreating } = useMutation({
         mutationFn: (data: ICreatePostDto) => postService.create(data),
         onSuccess: () => {
@@ -78,6 +108,7 @@ function PostQueryProvider({ children }: { children: React.ReactNode }) {
           });
           onSuccess?.();
         },
+        onError,
       });
 
       return { createPost, isCreating };
@@ -88,9 +119,11 @@ function PostQueryProvider({ children }: { children: React.ReactNode }) {
   const useCreateReply = useCallback(function ({
     postId,
     onSuccess,
+    onError,
   }: {
     postId: IPostId;
     onSuccess?: () => void;
+    onError?: () => void;
   }) {
     const { mutate: createReply, isPending: isCreating } = useMutation({
       mutationFn: (data: ICreateReplyDto) => postService.createReply(data),
@@ -103,6 +136,7 @@ function PostQueryProvider({ children }: { children: React.ReactNode }) {
         });
         onSuccess?.();
       },
+      onError,
     });
     return { createReply, isCreating };
   }, []);

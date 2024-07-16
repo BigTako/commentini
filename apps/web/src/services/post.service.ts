@@ -7,70 +7,39 @@ import {
 } from "~/components/modules/post/types";
 import { SOCKET_EVENTS } from "~/keys";
 
+interface IWsAckResponce<T> {
+  data: T;
+}
+
 export class PostService {
   constructor(private socket: Socket) {}
 
-  getAll() {
-    return new Promise<IPost[]>((resolve, reject) => {
-      this.socket.emit(
-        SOCKET_EVENTS.GET_ALL_POSTS,
-        {},
-        (response: { data: IPost[] }) => {
-          if (response.data) {
-            resolve(response.data);
-          } else {
-            reject(new Error("Failed to fetch posts"));
-          }
-        }
-      );
-    });
+  async getAll(): Promise<IPost[]> {
+    const responce = (await this.socket.emitWithAck(
+      SOCKET_EVENTS.GET_ALL_POSTS,
+      {}
+    )) as IWsAckResponce<IPost[]>;
+    return responce.data;
   }
 
-  getOne(id: IPostId) {
-    return new Promise<IPost>((resolve, reject) => {
-      this.socket.emit(
-        SOCKET_EVENTS.GET_POST,
-        { id },
-        (response: { data: IPost }) => {
-          if (response.data) {
-            resolve(response.data);
-          } else {
-            reject(new Error("Failed to fetch post"));
-          }
-        }
-      );
-    });
+  async getOne(id: IPostId): Promise<IPost> {
+    const responce = (await this.socket.emitWithAck(SOCKET_EVENTS.GET_POST, {
+      id,
+    })) as IWsAckResponce<IPost>;
+    return responce.data;
   }
 
-  create(data: ICreatePostDto) {
-    return new Promise<IPost>((resolve, reject) => {
-      this.socket.emit(
-        SOCKET_EVENTS.CREATE_POST,
-        data,
-        (response: { data: IPost }) => {
-          if (response.data) {
-            resolve(response.data);
-          } else {
-            reject(new Error("Failed to create post"));
-          }
-        }
-      );
-    });
+  async create(data: ICreatePostDto): Promise<IPost> {
+    const responce = (await this.socket
+      .timeout(1000)
+      .emitWithAck(SOCKET_EVENTS.CREATE_POST, data)) as IWsAckResponce<IPost>;
+    return responce.data;
   }
 
-  createReply(data: ICreateReplyDto) {
-    return new Promise<IPost>((resolve, reject) => {
-      this.socket.emit(
-        SOCKET_EVENTS.CREATE_REPLY,
-        data,
-        (response: { data: IPost }) => {
-          if (response.data) {
-            resolve(response.data);
-          } else {
-            reject(new Error("Failed to create reply"));
-          }
-        }
-      );
-    });
+  async createReply(data: ICreateReplyDto): Promise<IPost> {
+    const responce = (await this.socket
+      .timeout(1000)
+      .emitWithAck(SOCKET_EVENTS.CREATE_REPLY, data)) as IWsAckResponce<IPost>;
+    return responce.data;
   }
 }

@@ -27,7 +27,10 @@ function SocketProvider({ children }: { children: React.ReactNode }) {
     }
 
     function onServerException(error: IServerError) {
-      toast.error(error.messages[0] as string);
+      const errorMessage = `[SERVER ERROR]: \n${error.messages
+        .map((e) => `- ${e}`)
+        .join("\n")}`;
+      toast.error(errorMessage);
     }
 
     socket.on(SOCKET_EVENTS.CONNECT, onConnect);
@@ -37,6 +40,7 @@ function SocketProvider({ children }: { children: React.ReactNode }) {
     return () => {
       socket.off(SOCKET_EVENTS.CONNECT, onConnect);
       socket.off(SOCKET_EVENTS.DISCONNECT, onDisconnect);
+      socket.off(SOCKET_EVENTS.SERVER_EXCEPTION, onServerException);
     };
   }, [isConnected]);
 

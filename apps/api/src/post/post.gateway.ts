@@ -1,4 +1,4 @@
-import { UseFilters, UseInterceptors } from '@nestjs/common';
+import { UseFilters, UseInterceptors, UsePipes } from '@nestjs/common';
 import {
   MessageBody,
   OnGatewayConnection,
@@ -11,7 +11,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { GlobalExceptionFilter } from 'src/filters/global-exception.filter';
 import { createPostSchema } from 'src/lib/validation-schemas/post';
-import { ZodPipe } from 'src/pipes/validation.pipe';
+import { ZodPipe } from 'src/pipes/zod.pipe';
 import { PostService } from './post.service';
 import { CheckBodyInterceptor } from 'src/interceptors/check-body.interceptor';
 import { WsExceptionInterceptor } from 'src/interceptors/ws-exception.interceptor';
@@ -24,6 +24,7 @@ import {
   IPost,
   IPostResponse,
 } from './post';
+import { HtmlPipe } from 'src/pipes/html.pipe';
 
 @WebSocketGateway({ cors: { origin: '*' } })
 @UseInterceptors(WsExceptionInterceptor)
@@ -52,9 +53,10 @@ export class PostGateway
   }
 
   @UseInterceptors(CheckBodyInterceptor)
+  @UsePipes(new ZodPipe(createPostSchema, 'ws'), new HtmlPipe(['text'], 'ws'))
   @SubscribeMessage(WS_POST_EVENTS.CREATE_POST)
   async handleCreatePost(
-    @MessageBody(new ZodPipe(createPostSchema, 'ws')) body: ICreatePostDto,
+    @MessageBody() body: ICreatePostDto,
   ): Promise<IPostResponse<IPost>> {
     const post = await this.postService.create(body);
     return { data: post };

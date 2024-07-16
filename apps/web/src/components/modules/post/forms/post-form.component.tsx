@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
 import { Button, TextField } from "@mui/material";
 import { Formik, Form } from "formik";
-import { toFormikValidationSchema } from "zod-formik-adapter";
 import { ICreatePostDto } from "../types";
 import { ZodSchema } from "zod";
+import { RichTextEditor } from "~/components/rich-text-editor.component";
+import { htmlPlainText } from "~/utils/htmlPlainText";
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -49,11 +50,28 @@ export function PostForm({
   return (
     <Formik
       onSubmit={onSubmit}
-      validationSchema={toFormikValidationSchema(validationSchema)}
       initialValues={{
         username: "",
         email: "",
         text: "",
+      }}
+      validate={(values) => {
+        const errors = {} as { [key: string]: string };
+
+        const plainText = htmlPlainText(values.text).replace(/\n/, "");
+
+        const validationResult = validationSchema.safeParse({
+          ...values,
+          text: plainText,
+        });
+
+        validationResult.error?.errors.forEach((e) => {
+          const field = e.path[0] as string;
+          const message = e.message;
+          errors[field] = message;
+        });
+
+        return errors;
       }}
     >
       {({ errors, values, setFieldValue }) => (
@@ -78,17 +96,10 @@ export function PostForm({
             value={values["email"]}
             onChange={(e) => setFieldValue("email", e.target.value)}
           />
-          <TextField
-            error={!!errors.text}
-            helperText={errors?.text ?? ""}
-            label="Text"
-            name="text"
-            placeholder="Text"
-            rows={5}
-            maxRows={10}
-            multiline
+          <RichTextEditor
+            error={errors.text}
             value={values["text"]}
-            onChange={(e) => setFieldValue("text", e.target.value)}
+            setFieldValue={(val) => setFieldValue("text", val)}
           />
           <StyledPostFormMenu>
             <Button

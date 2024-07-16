@@ -2,6 +2,10 @@ import { Post } from '@prisma/client';
 
 export interface IPost extends Post {}
 
+export interface IPostWithReplies extends Post {
+  replies: IPostWithReplies[];
+}
+
 export type ICreatePostDto = Omit<IPost, 'id' | 'createdAt'>;
 
 export interface ICreateReplyDto {
