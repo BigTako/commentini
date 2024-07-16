@@ -4,6 +4,7 @@ import { Formik, Form } from "formik";
 import { ICreatePostDto } from "../types";
 import { ZodSchema } from "zod";
 import { RichTextEditor } from "~/components/rich-text-editor.component";
+import { htmlPlainText } from "~/utils/htmlPlainText";
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -34,13 +35,6 @@ const StyledPostFormMenu = styled("div")`
     border: none;
   }
 `;
-
-export function htmlPlainText(s: string) {
-  var span = document.createElement("span");
-  span.innerHTML = s;
-  const text = span.textContent || span.innerText;
-  return text;
-}
 
 export function PostForm({
   onCancel,

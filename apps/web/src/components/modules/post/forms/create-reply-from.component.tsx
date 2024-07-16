@@ -24,6 +24,9 @@ export function CreateReplyForm({
       onCancel();
       toast.success("Post created");
     },
+    onError: () => {
+      console.log("Error creating reply");
+    },
   });
 
   const onSubmit = useCallback((values: ICreatePostDto) => {

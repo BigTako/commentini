@@ -27,7 +27,10 @@ function SocketProvider({ children }: { children: React.ReactNode }) {
     }
 
     function onServerException(error: IServerError) {
-      toast.error(error.messages[0] as string);
+      const errorMessage = `[SERVER ERROR]: \n${error.messages
+        .map((e) => `- ${e}`)
+        .join("\n")}`;
+      toast.error(errorMessage);
     }
 
     socket.on(SOCKET_EVENTS.CONNECT, onConnect);
