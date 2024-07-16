@@ -13,14 +13,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
+model User {
   id         String   @id @default(uuid())
   email      String   @db.VarChar(320)
   username   String   @db.VarChar(128)
+  password   String   @db.VarChar(32)
+  posts      Post[]
+  createdAt  DateTime @default(now())
+}
+
+model Post {
+  id         String   @id @default(uuid())
   text       String   @db.VarChar(512)
   createdAt  DateTime @default(now())
   replies    Post[]   @relation("PostReplies")
   parent     Post?    @relation(fields: [parentId], references: [id], "PostReplies")
   parentId   String?
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
   @@map("post")
 }
