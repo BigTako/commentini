@@ -20,6 +20,7 @@ model User {
   password   String   @db.VarChar(32)
   posts      Post[]
   createdAt  DateTime @default(now())
+  @@map("user")
 }
 
 model Post {
