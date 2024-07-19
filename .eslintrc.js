@@ -8,4 +8,15 @@ module.exports = {
   parserOptions: {
     project: true,
   },
+  rules: {
+    "no-unused-vars": [
+      "warn",
+      {
+        vars: "all",
+        args: "none",
+        ignoreRestSiblings: true,
+        varsIgnorePattern: "^_", // Ignore variables that start with an underscore
+      },
+    ],
+  },
 };

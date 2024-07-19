@@ -1,4 +1,9 @@
-import { UseFilters, UseInterceptors, UsePipes } from '@nestjs/common';
+import {
+  UseFilters,
+  UseGuards,
+  UseInterceptors,
+  UsePipes,
+} from '@nestjs/common';
 import {
   MessageBody,
   OnGatewayConnection,
@@ -14,7 +19,6 @@ import { createPostSchema } from 'src/lib/validation-schemas/post';
 import { ZodPipe } from 'src/pipes/zod.pipe';
 import { PostService } from './post.service';
 import { CheckBodyInterceptor } from 'src/interceptors/check-body.interceptor';
-import { WsExceptionInterceptor } from 'src/interceptors/ws-exception.interceptor';
 import { WS_POST_EVENTS } from 'src/config/keys/ws-events';
 import {
   ICreatePostDto,
@@ -25,9 +29,9 @@ import {
   IPostResponse,
 } from './post';
 import { HtmlPipe } from 'src/pipes/html.pipe';
+import { JwtSocketGuard } from 'src/auth/jwt-socket.guard';
 
 @WebSocketGateway({ cors: { origin: '*' } })
-@UseInterceptors(WsExceptionInterceptor)
 @UseFilters(new GlobalExceptionFilter())
 export class PostGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
@@ -73,6 +77,7 @@ export class PostGateway
   }
 
   @SubscribeMessage(WS_POST_EVENTS.GET_ALL_POSTS)
+  @UseGuards(JwtSocketGuard)
   async handleGetAllPosts(
     @MessageBody() body: IGetAllPostsParams,
   ): Promise<IPostResponse<IPost[]>> {

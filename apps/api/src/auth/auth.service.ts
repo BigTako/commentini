@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { ICreateUserDto, IUser } from 'src/users/user';
+import { ICreateUserDto, IUser, IUserResponce } from 'src/users/user';
 import { JwtService } from '@nestjs/jwt';
+import { filterObj } from 'src/utils/filterObj';
 
 @Injectable()
 export class AuthService {
@@ -10,11 +11,17 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<IUser | null> {
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<IUserResponce | null> {
     const user = await this.usersService.findOneByEmail(email);
     if (user && user.password === password) {
-      // const { password: _, ...result } = user;
-      return user;
+      const resp: IUserResponce = filterObj({
+        obj: user,
+        filterFields: ['password'],
+      }) as IUserResponce;
+      return resp;
     }
     return null;
   }
