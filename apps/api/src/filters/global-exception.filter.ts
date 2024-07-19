@@ -14,10 +14,14 @@ export class GlobalExceptionFilter
   implements ExceptionFilter
 {
   catch(exception: WsException | HttpException, host: ArgumentsHost) {
+    console.log(exception);
+
     if (exception instanceof WsException) {
       const client = host.switchToWs().getClient<Socket>();
+      const error = exception.getError() as { message: string[] | string };
 
-      const message = exception.message || 'Internal server error';
+      const message = error.message || 'Internal server error';
+
       const errorMessages = Array.isArray(message) ? message : [message];
 
       const errorResponce = {

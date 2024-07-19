@@ -20,7 +20,9 @@ export class CheckBodyInterceptor implements NestInterceptor {
         typeof value === 'string' &&
         forbiddenSymbols.some((symbol) => value.includes(symbol))
       ) {
-        throw new WsException(`${key} data contains forbidden symbols.`);
+        throw new WsException({
+          message: `${key} data contains forbidden symbols.`,
+        });
       }
     }
     return next.handle();

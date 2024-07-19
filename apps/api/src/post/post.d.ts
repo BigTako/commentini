@@ -2,20 +2,19 @@ import { Post } from '@prisma/client';
 
 export interface IPost extends Post {}
 
+export type IPostId = IPost['id'];
+
 export interface IPostWithReplies extends Post {
   replies: IPostWithReplies[];
 }
 
-export type ICreatePostDto = Omit<IPost, 'id' | 'createdAt'>;
+export type ICreatePostDto = Pick<IPost, 'text'>;
 
-export interface ICreateReplyDto {
-  postId: IPost['id'];
-  reply: ICreatePostDto;
+export interface ICreateReplyDto extends ICreatePostDto {
+  parentId: IPostId;
 }
 
 export type IUpdatePostDto = Partial<ICreatePostDto>;
-
-export type IPostId = IPost['id'];
 
 export interface IGetPostDto {
   id: IPostId;

@@ -16,7 +16,7 @@ export class HtmlPipe implements PipeTransform {
 
   private throwError(message: string) {
     if (this.exceptionType === 'ws') {
-      throw new WsException(message);
+      throw new WsException({ message });
     }
     if (this.exceptionType === 'http') {
       throw new HttpException(message, 400);

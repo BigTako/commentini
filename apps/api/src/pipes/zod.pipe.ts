@@ -11,15 +11,16 @@ export class ZodPipe implements PipeTransform {
   ) {}
 
   transform(value: object) {
+    console.log({ value });
     try {
       this.schema.parse(value);
     } catch (error) {
-      const errorMessage = formatError(error);
+      const message = formatError(error);
       if (this.exceptionType === 'ws') {
-        throw new WsException(errorMessage);
+        throw new WsException({ message });
       }
       if (this.exceptionType === 'http') {
-        throw new BadRequestException(errorMessage);
+        throw new BadRequestException({ message });
       }
     }
     return value;

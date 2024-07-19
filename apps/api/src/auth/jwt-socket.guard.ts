@@ -18,7 +18,7 @@ export class JwtSocketGuard extends AuthGuard('jwt-socket') {
       client.handshake.auth?.token || client.handshake.headers?.token;
 
     if (!token) {
-      throw new WsException('Unauthorized');
+      throw new WsException({ message: 'Unauthorized' });
     }
 
     const authtoken: string = Array.isArray(token) ? token[0] : token;
@@ -30,7 +30,7 @@ export class JwtSocketGuard extends AuthGuard('jwt-socket') {
 
   handleRequest<IUser>(err: Error, user: IUser): IUser {
     if (err || !user) {
-      throw new WsException('Unauthorized'); // Customize your error message or type here
+      throw new WsException({ message: 'Unauthorized' }); // Customize your error message or type here
     }
     return user;
   }

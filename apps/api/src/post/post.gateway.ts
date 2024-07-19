@@ -1,10 +1,6 @@
+import { UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import {
-  UseFilters,
-  UseGuards,
-  UseInterceptors,
-  UsePipes,
-} from '@nestjs/common';
-import {
+  ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -31,6 +27,13 @@ import {
 import { HtmlPipe } from 'src/pipes/html.pipe';
 import { JwtSocketGuard } from 'src/auth/jwt-socket.guard';
 
+interface IUserPayload {
+  id: string;
+  email: string;
+}
+
+type IAuthedSocket = Socket & { user: IUserPayload };
+
 @WebSocketGateway({ cors: { origin: '*' } })
 @UseFilters(new GlobalExceptionFilter())
 export class PostGateway
@@ -56,23 +59,45 @@ export class PostGateway
     return { message: 'success' };
   }
 
-  @UseInterceptors(CheckBodyInterceptor)
-  @UsePipes(new ZodPipe(createPostSchema, 'ws'), new HtmlPipe(['text'], 'ws'))
   @SubscribeMessage(WS_POST_EVENTS.CREATE_POST)
+  @UseGuards(JwtSocketGuard)
+  @UseInterceptors(CheckBodyInterceptor)
   async handleCreatePost(
-    @MessageBody() body: ICreatePostDto,
+    @MessageBody(
+      new ZodPipe(createPostSchema, 'ws'),
+      new HtmlPipe(['text'], 'ws'),
+    )
+    body: ICreatePostDto,
+    @ConnectedSocket() client: IAuthedSocket,
   ): Promise<IPostResponse<IPost>> {
-    const post = await this.postService.create(body);
+    const currentUserId = client.user.id;
+
+    const post = await this.postService.create({
+      userId: currentUserId,
+      data: body,
+    });
     return { data: post };
   }
 
   @UseInterceptors(CheckBodyInterceptor)
+  @UseGuards(JwtSocketGuard)
   @SubscribeMessage(WS_POST_EVENTS.CREATE_REPLY)
   async handleCreateReply(
-    @MessageBody() body: ICreateReplyDto,
+    @MessageBody(
+      new ZodPipe(createPostSchema, 'ws'),
+      new HtmlPipe(['text'], 'ws'),
+    )
+    body: ICreateReplyDto,
+    @ConnectedSocket() client: IAuthedSocket,
   ): Promise<IPostResponse<IPost>> {
-    const { postId, reply } = body;
-    const post = await this.postService.createReply(postId, reply);
+    const { parentId, ...reply } = body;
+    const currentUserId = client.user.id;
+
+    const post = await this.postService.createReply({
+      parentId,
+      userId: currentUserId,
+      data: reply,
+    });
     return { data: post };
   }
 
@@ -82,7 +107,6 @@ export class PostGateway
     @MessageBody() body: IGetAllPostsParams,
   ): Promise<IPostResponse<IPost[]>> {
     const { page = 1, sortBy = 'createdAt', sort = 'desc' } = body;
-
     const take = 25;
     const skip = (page - 1) * take;
 
@@ -101,7 +125,8 @@ export class PostGateway
 
   @SubscribeMessage(WS_POST_EVENTS.GET_POST)
   async handleGetPost(
-    @MessageBody() body: IGetPostDto,
+    @MessageBody()
+    body: IGetPostDto,
   ): Promise<IPostResponse<IPost>> {
     const { id } = body;
     const post = await this.postService.findOne(id);

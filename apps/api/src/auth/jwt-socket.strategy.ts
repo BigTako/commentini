@@ -19,12 +19,8 @@ export class JwtSocketStrategy extends PassportStrategy(
   }
 
   private static extractJWT(socket: Socket): string | null {
-    if (socket.handshake?.headers?.token) {
-      const token = socket.handshake?.headers?.token;
-      if (Array.isArray(token)) {
-        return token[0];
-      }
-      return token;
+    if (socket.data.token) {
+      return socket.data.token;
     }
     return null;
   }
