@@ -10,7 +10,6 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { GlobalExceptionFilter } from 'src/filters/global-exception.filter';
 import { createPostSchema } from 'src/lib/validation-schemas/post';
 import { ZodPipe } from 'src/pipes/zod.pipe';
 import { PostService } from './post.service';
@@ -25,7 +24,8 @@ import {
   IPostResponse,
 } from './post';
 import { HtmlPipe } from 'src/pipes/html.pipe';
-import { JwtSocketGuard } from 'src/auth/jwt-socket.guard';
+import { JwtSocketGuard } from 'src/auth/guards/jwt-socket.guard';
+import { WsExceptionFilter } from 'src/filters/ws-exception.filter';
 
 interface IUserPayload {
   id: string;
@@ -35,7 +35,7 @@ interface IUserPayload {
 type IAuthedSocket = Socket & { user: IUserPayload };
 
 @WebSocketGateway({ cors: { origin: '*' } })
-@UseFilters(new GlobalExceptionFilter())
+@UseFilters(new WsExceptionFilter())
 export class PostGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {

@@ -11,7 +11,6 @@ export class ZodPipe implements PipeTransform {
   ) {}
 
   transform(value: object) {
-    console.log({ value });
     try {
       this.schema.parse(value);
     } catch (error) {

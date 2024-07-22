@@ -23,14 +23,14 @@ export class JwtSocketGuard extends AuthGuard('jwt-socket') {
 
     const authtoken: string = Array.isArray(token) ? token[0] : token;
 
-    client.data.token = authtoken; // Set the token on the Socket object
+    client.data.token = authtoken;
 
     return super.canActivate(context);
   }
 
   handleRequest<IUser>(err: Error, user: IUser): IUser {
     if (err || !user) {
-      throw new WsException({ message: 'Unauthorized' }); // Customize your error message or type here
+      throw new WsException({ message: 'Unauthorized' });
     }
     return user;
   }

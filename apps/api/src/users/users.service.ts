@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../services/prisma.service';
 import { ICreateUserDto, IUser, IUserId } from './user';
+import { AuthProvider } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -11,18 +12,33 @@ export class UsersService {
     return user;
   }
 
+  async findByEmailOrCreate({
+    email,
+    data,
+  }: {
+    email: string;
+    data: ICreateUserDto;
+  }) {
+    const user = await this.prismaService.user.upsert({
+      where: {
+        email,
+      },
+      update: {},
+      create: data,
+    });
+    return user;
+  }
+
   async findOne(id: IUserId) {
     const user = await this.prismaService.user.findUnique({ where: { id } });
-
-    // if (!user) {
-    //   throw new NotFoundException('No User Found');
-    // }
 
     return user;
   }
 
-  async findOneByEmail(email: string) {
-    const user = await this.prismaService.user.findUnique({ where: { email } });
+  async findOneLocalAuthed(email: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { email, authProvider: AuthProvider.LOCAL },
+    });
     if (!user) {
       throw new NotFoundException('No User Found');
     }
