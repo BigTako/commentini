@@ -9,6 +9,7 @@ import {
   IUpdatePostDto,
 } from './post';
 import { postRepliesToJSON } from '../utils/postRepliesToJSON';
+import { IUserId } from 'src/users/user';
 
 @Injectable()
 export class PostService {
@@ -50,35 +51,58 @@ export class PostService {
     return postWithReplies;
   }
 
-  async create(data: ICreatePostDto): Promise<IPost> {
+  async create({
+    userId,
+    data,
+  }: {
+    userId: string;
+    data: ICreatePostDto;
+  }): Promise<IPost> {
     const post = await this.prismaService.post.create({
-      data,
-    });
-    return post;
-  }
-
-  async update(id: IPostId, data: IUpdatePostDto) {
-    const post = await this.prismaService.post.update({
-      where: {
-        id,
-      },
-      data,
-    });
-    return post;
-  }
-
-  async createReply(id: IPostId, data: ICreatePostDto) {
-    const post = await this.prismaService.post.update({
-      where: {
-        id,
-      },
       data: {
-        replies: {
-          create: data,
+        ...data,
+        user: {
+          connect: {
+            id: userId,
+          },
         },
       },
-      include: {
-        replies: true,
+    });
+    return post;
+  }
+
+  async update({ id, data }: { id: IPostId; data: IUpdatePostDto }) {
+    const post = await this.prismaService.post.update({
+      where: {
+        id,
+      },
+      data,
+    });
+    return post;
+  }
+
+  async createReply({
+    parentId,
+    userId,
+    data,
+  }: {
+    parentId: IPostId;
+    userId: IUserId;
+    data: ICreatePostDto;
+  }) {
+    const post = await this.prismaService.post.create({
+      data: {
+        ...data,
+        parent: {
+          connect: {
+            id: parentId,
+          },
+        },
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
       },
     });
     return post;

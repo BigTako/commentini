@@ -16,7 +16,7 @@ export class HtmlPipe implements PipeTransform {
 
   private throwError(message: string) {
     if (this.exceptionType === 'ws') {
-      throw new WsException(message);
+      throw new WsException({ message });
     }
     if (this.exceptionType === 'http') {
       throw new HttpException(message, 400);
@@ -24,7 +24,6 @@ export class HtmlPipe implements PipeTransform {
   }
 
   transform(value: { [key: string]: unknown }) {
-    console.log({ value, fields: this.fields });
     for (const field of this.fields) {
       const fieldValue = value[field];
       if (!fieldValue) {
@@ -35,7 +34,6 @@ export class HtmlPipe implements PipeTransform {
       }
 
       const validHtml = this.isValidHtml(fieldValue as string);
-      console.log({ validHtml });
       if (!validHtml) {
         return this.throwError(`Value of field ${field} is invalid`);
       }

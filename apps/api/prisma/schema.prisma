@@ -13,14 +13,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum AuthProvider {
+  GOOGLE
+  LOCAL
+}
+
+model User {
+  id           String       @id @default(uuid())
+  email        String       @unique @db.VarChar(320)
+  username     String       @db.VarChar(128)
+  password     String?      @db.VarChar(128)
+  authProvider AuthProvider @default(LOCAL)
+  posts        Post[]
+  createdAt    DateTime     @default(now())
+
+  @@map("user")
+}
+
 model Post {
-  id         String   @id @default(uuid())
-  email      String   @db.VarChar(320)
-  username   String   @db.VarChar(128)
-  text       String   @db.VarChar(512)
-  createdAt  DateTime @default(now())
-  replies    Post[]   @relation("PostReplies")
-  parent     Post?    @relation(fields: [parentId], references: [id], "PostReplies")
-  parentId   String?
+  id        String   @id @default(uuid())
+  text      String   @db.VarChar(512)
+  createdAt DateTime @default(now())
+  replies   Post[]   @relation("PostReplies")
+  parent    Post?    @relation(fields: [parentId], references: [id], "PostReplies", onDelete: Cascade)
+  parentId  String?
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@map("post")
 }
