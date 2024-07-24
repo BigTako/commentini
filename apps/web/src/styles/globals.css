@@ -1,4 +1,5 @@
 :root {
+  /* primary(grey) */
   --color-primary-50: #f8fafc;
   --color-primary-100: #f1f5f9;
   --color-primary-200: #e2e8f0;
@@ -10,8 +11,34 @@
   --color-primary-800: #1e293b;
   --color-primary-900: #0f172a;
   --color-primary-950: #020617;
+
+  /* secondary(violet) */
+  --color-secondary-50: #eff1fc;
+  --color-secondary-100: #dfe3f9;
+  --color-secondary-150: #cfd5f7;
+  --color-secondary-200: #bfc7f4;
+  --color-secondary-250: #afb9f1;
+  --color-secondary-300: #9eaaee;
+  --color-secondary-350: #8e9ceb;
+  --color-secondary-400: #7e8ee9;
+  --color-secondary-450: #6e80e6;
+  --color-secondary-500: #5e72e3;
+  --color-secondary-550: #5567cc;
+  --color-secondary-600: #4b5bb6;
+  --color-secondary-650: #42509f;
+  --color-secondary-700: #384488;
+  --color-secondary-750: #2f3972;
+  --color-secondary-800: #262e5b;
+  --color-secondary-850: #1c2244;
+  --color-secondary-900: #13172d;
+  --color-secondary-950: #090b17;
+
+  /* others */
   --color-other-white: #fff;
-  --color-other-violet: #7c3aed;
+  --color-other-black: #000;
+
+  /* box shadow */
+  --b-shadow-min: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 * {
@@ -40,4 +67,13 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

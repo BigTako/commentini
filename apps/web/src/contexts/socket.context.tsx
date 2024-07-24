@@ -27,9 +27,20 @@ function SocketProvider({ children }: { children: React.ReactNode }) {
     }
 
     function onServerException(error: IServerError) {
-      const errorMessage = `[SERVER ERROR]: \n${error.messages
-        .map((e) => `- ${e}`)
-        .join("\n")}`;
+      const { messages } = error;
+      let errorMessage = "";
+
+      if (messages.length < 1) {
+        errorMessage = "Internal server error";
+      }
+      if (messages.length === 1) {
+        errorMessage = messages[0] as string;
+      }
+      if (messages.length > 1) {
+        errorMessage = `[SERVER ERROR]: \n${error.messages
+          .map((e) => `- ${e}`)
+          .join("\n")}`;
+      }
       toast.error(errorMessage);
     }
 

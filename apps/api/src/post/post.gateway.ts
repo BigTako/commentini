@@ -102,7 +102,6 @@ export class PostGateway
   }
 
   @SubscribeMessage(WS_POST_EVENTS.GET_ALL_POSTS)
-  @UseGuards(JwtSocketGuard)
   async handleGetAllPosts(
     @MessageBody() body: IGetAllPostsParams,
   ): Promise<IPostResponse<IPost[]>> {

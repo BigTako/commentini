@@ -17,7 +17,7 @@ export class WsExceptionFilter
     const message = error.message || 'Internal server error';
     const errorMessages = Array.isArray(message) ? message : [message];
     const errorResponse = {
-      message: errorMessages,
+      messages: errorMessages,
     };
 
     return client.emit(WS_SERVER_EVENTS.SERVER_EXCEPTION, errorResponse);

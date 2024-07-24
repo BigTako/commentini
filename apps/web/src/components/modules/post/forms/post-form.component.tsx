@@ -30,7 +30,7 @@ const StyledPostFormMenu = styled("div")`
 
   & > .submit-button,
   & > .submit-button:hover {
-    background-color: var(--color-other-violet);
+    background-color: var(--color-secondary-500);
     color: var(--color-primary-50);
     border: none;
   }
