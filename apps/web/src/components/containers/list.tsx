@@ -11,7 +11,7 @@ export function ListContainer<T>({
 }: {
   id: string;
   items: T[];
-  renderItem: (_item: T) => JSX.Element;
+  renderItem: (item: T) => JSX.Element;
 }) {
   return (
     <StyledList>

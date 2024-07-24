@@ -4,7 +4,7 @@ export interface CustomTableColumn {
   field: string;
   width: number | string;
   textAlign?: "center" | "left" | "right" | "justify" | "inherit";
-  formatField?: (_value: unknown) => unknown;
+  formatField?: (value: unknown) => unknown;
 }
 
 export interface CustomTableRow {
