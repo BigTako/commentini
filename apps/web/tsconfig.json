@@ -8,7 +8,8 @@
       "@hooks/*": ["./src/hooks/*"],
       "@keys": ["./src/keys"],
       "@modules/*": ["./src/components/modules/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@icons/*": ["./public/*"]
     },
     "plugins": [
       {

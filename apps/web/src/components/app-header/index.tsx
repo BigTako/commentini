@@ -60,7 +60,7 @@ export function AppHeader() {
 
   const { isMobile } = useScreenSize();
 
-  const isAuthenticated = true;
+  const isAuthenticated = false;
 
   const togglePopoverOpened = useCallback((name: string) => {
     setPopoverOpened((v) => (v === name ? "" : name));
