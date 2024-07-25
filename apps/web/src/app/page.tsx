@@ -9,14 +9,7 @@ import { useModal } from "~/contexts/modal.context";
 import { useSocket } from "~/contexts/socket.context";
 import { useScreenSize } from "~/hooks/useScreenSize";
 import { Fab } from "@mui/material";
-
-const StyledMainContainer = styled("main")`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+import { FullCenteredContainer } from "~/components/containers";
 
 const StyledFab = styled(Fab)`
   position: absolute;
@@ -47,7 +40,7 @@ export default function Page(): JSX.Element {
   }
 
   return (
-    <StyledMainContainer>
+    <FullCenteredContainer>
       {isConnected ? (
         <>
           <PostsContainer />
@@ -69,6 +62,6 @@ export default function Page(): JSX.Element {
       ) : (
         <div style={{ textAlign: "center" }}>Disconnected</div>
       )}
-    </StyledMainContainer>
+    </FullCenteredContainer>
   );
 }
