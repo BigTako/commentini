@@ -8,4 +8,4 @@ export type IUserEmail = IUser['email'];
 
 export type ICreateUserDto = Omit<IUser, 'id' | 'createdAt'>;
 
-export type IUserResponce = Omit<IUser, 'password'>;
+export type IUserProfile = Omit<IUser, 'password'>;

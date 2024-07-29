@@ -9,6 +9,7 @@ import { ModalProvider } from "~/contexts/modal.context";
 import { SocketProvider } from "~/contexts/socket.context";
 import { PostQueryProvider } from "~/contexts/post-query.context";
 import { createTheme, ThemeProvider } from "@mui/material";
+import { AuthQueryProvider } from "~/contexts/auth-query.context";
 
 const theme = createTheme({
   typography: {
@@ -24,9 +25,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <ThemeProvider theme={theme}>
         <ReactQueryStreamedHydration>
           <SocketProvider>
-            <PostQueryProvider>
-              <ModalProvider>{children}</ModalProvider>
-            </PostQueryProvider>
+            <AuthQueryProvider>
+              <PostQueryProvider>
+                <ModalProvider>{children}</ModalProvider>
+              </PostQueryProvider>
+            </AuthQueryProvider>
           </SocketProvider>
           <Toaster
             position="top-center"

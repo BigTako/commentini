@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext } from "react";
 import { useSocket } from "./socket.context";
-import { PostService } from "~/services/post.service";
+import { PostService } from "~/services/ws/post.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ICreatePostDto,
@@ -36,21 +36,14 @@ interface IQueryResult<T> {
 interface IPostQueryContext {
   usePosts: () => IQueryResult<IPost[]>;
   usePost: (id: IPostId) => IQueryResult<IPost>;
-  useCreatePost: ({
-    onSuccess,
-    onError,
-  }: {
+  useCreatePost: (options: {
     onSuccess: IMutationOnSuccess;
     onError: IMutationOnError;
   }) => {
     createPost: (data: ICreatePostDto) => Promise<IPost>;
     isCreating: boolean;
   };
-  useCreateReply: ({
-    postId,
-    onSuccess,
-    onError,
-  }: {
+  useCreateReply: (options: {
     postId: IPostId;
     onSuccess: IMutationOnSuccess;
     onError: IMutationOnError;

@@ -52,7 +52,11 @@ export default function AuthWindow({
     <StyledLoginContainer width={isMobile ? "100%" : ""}>
       <StyledHeaderContainer>
         <StyledSecondaryText>{header}</StyledSecondaryText>
-        <AuthServiceButton width={isMobile ? "100%" : "300px"} href="#google">
+        <AuthServiceButton
+          width={isMobile ? "100%" : "300px"}
+          href={`${process.env.SERVER_URL}/auth/google`}
+          target="_blank"
+        >
           <Image
             width={20}
             height={20}

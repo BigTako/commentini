@@ -10,6 +10,8 @@ import { useState } from "react";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { loginSchema } from "~/components/lib/validations-schemas/user";
 import { ILoginDto } from "../types";
+import { useAuthQuery } from "~/contexts/auth-query.context";
+import toast from "react-hot-toast";
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -48,8 +50,18 @@ const StyledLoginButton = styled("button")`
 `;
 
 export function LoginForm() {
-  const onSubmit = (values: ILoginDto) => {
-    console.log({ values });
+  const { login, isLoading } = useAuthQuery().useLogin({
+    onSuccess: () => {
+      toast.success("Logged in successfuly!");
+    },
+    onError: (error) => {
+      const message = error.message;
+      toast.error(message);
+    },
+  });
+
+  const onSubmit = async (values: ILoginDto) => {
+    await login(values);
   };
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -109,7 +121,9 @@ export function LoginForm() {
             }}
           />
 
-          <StyledLoginButton type="submit">Log In</StyledLoginButton>
+          <StyledLoginButton type="submit" disabled={isLoading}>
+            Log In
+          </StyledLoginButton>
         </StyledForm>
       )}
     </Formik>

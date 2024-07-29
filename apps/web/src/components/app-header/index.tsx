@@ -14,6 +14,9 @@ import { VioletRectButton } from "../buttons/rect-violet-button.component";
 import { MenuListItem } from "../containers/menu-list/item.component";
 import { MenuList } from "../containers/menu-list";
 import { useRouter } from "next/navigation";
+import { useAuthQuery } from "~/contexts/auth-query.context";
+import { Loader } from "../loader.component";
+import toast from "react-hot-toast";
 
 const StyledAppHeader = styled("div")`
   padding: 10px 20px;
@@ -40,12 +43,29 @@ function UnAuthedPopover({ visible }: { visible: boolean }) {
   );
 }
 
-function AuthedPopover({ visible }: { visible: boolean }) {
+function AuthedPopover({
+  visible,
+  onLogout,
+}: {
+  visible: boolean;
+  onLogout?: () => void;
+}) {
+  const logout = useAuthQuery().useLogout({
+    onSuccess: () => {
+      toast.success("Logged out");
+      onLogout?.();
+    },
+  }).logout;
+
   return (
     <Popover top="75px" right="10px" visible={visible}>
       <MenuList>
         <MenuListItem icon={<AccountCircleIcon />} text="View Profile" />
-        <MenuListItem icon={<LogoutIcon />} text="Log Out" />
+        <MenuListItem
+          icon={<LogoutIcon />}
+          text="Log Out"
+          onClick={() => logout()}
+        />
       </MenuList>
     </Popover>
   );
@@ -55,48 +75,67 @@ function LoginButton() {
   return <VioletRectButton href="/login">Login</VioletRectButton>;
 }
 
+const LoaderContainer = styled("div")`
+  display: flex;
+  justify-content: flex-end;
+`;
+
 export function AppHeader() {
-  const [PopoverOpened, setPopoverOpened] = useState("");
+  const [popoverOpened, setPopoverOpened] = useState("");
+  const { isLoading, data: profile, error } = useAuthQuery().useUserProfile();
 
   const { isMobile } = useScreenSize();
 
-  const isAuthenticated = false;
+  const isAuthenticated = profile && !error;
 
   const togglePopoverOpened = useCallback((name: string) => {
     setPopoverOpened((v) => (v === name ? "" : name));
   }, []);
 
+  const { username } = profile || {};
+
   return (
     <StyledAppHeader>
       <AppLogo />
-      {isMobile && (
-        <VioletRoundedButton
-          onClick={() => {
-            const name = isAuthenticated
-              ? "authed-Popover"
-              : "unauthed-Popover";
-            togglePopoverOpened(name);
-          }}
-        >
-          <MoreVertIcon />
-        </VioletRoundedButton>
-      )}
-      {!isMobile && (
+      {isLoading ? (
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      ) : (
         <>
-          {isAuthenticated && (
-            <HeaderProfileInfo
-              username="Alexander Shcherbatov"
-              profileImage="/avatar.png"
+          {isMobile && (
+            <VioletRoundedButton
               onClick={() => {
-                togglePopoverOpened("authed-Popover");
+                const name = isAuthenticated
+                  ? "authed-Popover"
+                  : "unauthed-Popover";
+                togglePopoverOpened(name);
               }}
-            />
+            >
+              <MoreVertIcon />
+            </VioletRoundedButton>
           )}
-          {!isAuthenticated && <LoginButton />}
+          {!isMobile && (
+            <>
+              {isAuthenticated && (
+                <HeaderProfileInfo
+                  username={username}
+                  profileImage="/avatar.png"
+                  onClick={() => {
+                    togglePopoverOpened("authed-Popover");
+                  }}
+                />
+              )}
+              {!isAuthenticated && <LoginButton />}
+            </>
+          )}
         </>
       )}
-      <UnAuthedPopover visible={PopoverOpened === "unauthed-Popover"} />
-      <AuthedPopover visible={PopoverOpened === "authed-Popover"} />
+      <UnAuthedPopover visible={popoverOpened === "unauthed-Popover"} />
+      <AuthedPopover
+        visible={popoverOpened === "authed-Popover"}
+        onLogout={() => setPopoverOpened("")}
+      />
     </StyledAppHeader>
   );
 }

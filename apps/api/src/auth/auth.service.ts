@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { ILocalLoginDto, ILocalSignUpDto } from './types';
 import { ICreateUserDto, IUser } from 'src/users/user';
+import { Request } from 'express';
 
 export interface IGoogleProfile {
   id: string;
@@ -70,7 +71,7 @@ export class AuthService {
     };
   }
 
-  async googleLogin(req: { user: IGoogleProfile }) {
+  async googleLogin(req: Request & { user: IGoogleProfile }) {
     const reqUser = req.user;
 
     if (!reqUser) {
