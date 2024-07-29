@@ -7,10 +7,12 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EmailIcon from "@mui/icons-material/Email";
+import toast from "react-hot-toast";
 import { useState } from "react";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { signUpSchema } from "~/components/lib/validations-schemas/user";
 import { ISignupDto } from "../types";
+import { useAuthQuery } from "~/contexts/auth-query.context";
 
 const StyledForm = styled(Form)`
   display: flex;
@@ -50,8 +52,18 @@ const StyledLoginButton = styled("button")`
 `;
 
 export function SignupForm() {
-  const onSubmit = (values: ISignupDto) => {
-    console.log({ values });
+  const { signup, isLoading } = useAuthQuery().useSingup({
+    onSuccess: () => {
+      toast.success("Account created successfuly!");
+    },
+    onError: (error) => {
+      const message = error.message;
+      toast.error(message);
+    },
+  });
+
+  const onSubmit = async (values: ISignupDto) => {
+    await signup(values);
   };
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -129,7 +141,9 @@ export function SignupForm() {
             }}
           />
 
-          <StyledLoginButton type="submit">Log In</StyledLoginButton>
+          <StyledLoginButton type="submit" disabled={isLoading}>
+            Log In
+          </StyledLoginButton>
         </StyledForm>
       )}
     </Formik>

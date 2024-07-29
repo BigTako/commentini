@@ -9,12 +9,12 @@ function formatPrismaError(data: PrismaClientKnownRequestError): string {
   if (code === 'P2002') {
     const modelName = errorMeta?.modelName ?? 'Instance';
     const field = errorMeta?.target[0] ?? 'field';
-    return `Error: ${modelName} with this ${field} already exists`;
+    return `${modelName} with this ${field} already exists`;
   }
   if (code === 'P2000') {
     const modelName = errorMeta?.modelName ?? 'Instance';
     const field = errorMeta?.column_name ?? 'field';
-    return `Error: Value of field ${field} is too long for defined in ${modelName} model`;
+    return `Value of field ${field} is too long for defined in ${modelName} model`;
   }
   console.log(data);
   return `Database error`;

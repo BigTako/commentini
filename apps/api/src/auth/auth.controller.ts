@@ -5,13 +5,14 @@ import {
   Get,
   Post,
   Request,
+  Response,
   UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Request as ERequest } from 'express';
+import { Request as ERequest, Response as EResponce } from 'express';
 import { IUser } from 'src/users/user';
-import { AuthService } from './auth.service';
+import { AuthService, IGoogleProfile } from './auth.service';
 import { formatError } from 'src/utils/formatError';
 import { ZodPipe } from 'src/pipes/zod.pipe';
 import {
@@ -36,8 +37,13 @@ export class AuthController {
 
   @Get('google-redirect')
   @UseGuards(GoogleOAuthGuard)
-  googleAuthRedirect(@Request() req: any) {
-    return this.authService.googleLogin(req);
+  async googleAuthRedirect(
+    @Request() req: ERequest & { user: IGoogleProfile },
+    @Response() res: EResponce,
+  ) {
+    const { token } = await this.authService.googleLogin(req);
+    const redirectUrl = `${process.env.CLIENT_URL}/auth/${token}`;
+    res.status(301).redirect(redirectUrl);
   }
 
   @Post('signup')

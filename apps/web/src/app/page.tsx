@@ -10,6 +10,7 @@ import { useSocket } from "~/contexts/socket.context";
 import { useScreenSize } from "~/hooks/useScreenSize";
 import { Fab } from "@mui/material";
 import { FullCenteredContainer } from "~/components/containers";
+import { useAuthQuery } from "~/contexts/auth-query.context";
 
 const StyledFab = styled(Fab)`
   position: absolute;
@@ -21,10 +22,11 @@ const StyledFab = styled(Fab)`
 
 export default function Page(): JSX.Element {
   const { isConnected } = useSocket();
-
+  const { data: profile } = useAuthQuery().useUserProfile();
   const { isDesktop, isTablet } = useScreenSize();
 
   const { handleOpen, handleClose } = useModal();
+
   const handleOpenCreatePostModal = useCallback(() => {
     handleOpen("create-post-modal");
   }, []);
@@ -39,25 +41,32 @@ export default function Page(): JSX.Element {
     width = "100%";
   }
 
+  const isUserLoggedIn = !!profile;
+  console.log({ isUserLoggedIn });
   return (
     <FullCenteredContainer>
       {isConnected ? (
         <>
           <PostsContainer />
-          <StyledFab
-            onClick={handleOpenCreatePostModal}
-            aria-label="add"
-            size="medium"
-          >
-            <AddIcon />
-          </StyledFab>
-          <ModalWindow
-            width={width}
-            name="create-post-modal"
-            title="Create post"
-          >
-            <CreatePostForm onCancel={handleClose} />
-          </ModalWindow>
+          {isUserLoggedIn ? (
+            <>
+              <StyledFab
+                onClick={handleOpenCreatePostModal}
+                aria-label="add"
+                size="medium"
+              >
+                <AddIcon />
+              </StyledFab>
+
+              <ModalWindow
+                width={width}
+                name="create-post-modal"
+                title="Create post"
+              >
+                <CreatePostForm onCancel={handleClose} />
+              </ModalWindow>
+            </>
+          ) : null}
         </>
       ) : (
         <div style={{ textAlign: "center" }}>Disconnected</div>

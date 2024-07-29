@@ -5,14 +5,17 @@ module.exports = {
     es2021: true,
   },
   root: true,
-  extends: ["@repo/eslint-config/next.js"],
+  extends: [
+    "@repo/eslint-config/next.js",
+    "plugin:@typescript-eslint/recommended",
+  ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: true,
   },
   rules: {
-    "no-unused-vars": [
-      "warn",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
       {
         vars: "all",
         args: "none",
@@ -20,5 +23,14 @@ module.exports = {
         varsIgnorePattern: "^_", // Ignore variables that start with an underscore
       },
     ],
+    "no-unused-vars": "off",
   },
+  overrides: [
+    {
+      files: ["*.ts", "*.tsx"],
+      rules: {
+        "@typescript-eslint/no-unused-vars": ["off"],
+      },
+    },
+  ],
 };
